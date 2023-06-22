@@ -21,6 +21,6 @@ public class ThreeDGraphicsAttachment {
     private byte[] bytes;
 
     @OneToOne
-    private Picture picture;
+    private ThreeDGraphics threeDGraphics;
 
 }

@@ -1,15 +1,23 @@
 package itmasters.project.stem.service;
 
 import itmasters.project.stem.entity.Section;
-import itmasters.project.stem.entity.Subject;
 import itmasters.project.stem.entity.Topic;
+import itmasters.project.stem.entity.attachment.Picture;
+import itmasters.project.stem.entity.attachment.PictureAttachment;
+import itmasters.project.stem.entity.attachment.ThreeDGraphics;
+import itmasters.project.stem.entity.attachment.ThreeDGraphicsAttachment;
 import itmasters.project.stem.payload.SectionDTO;
 import itmasters.project.stem.repository.SectionRepository;
-import itmasters.project.stem.repository.SubjectRepository;
 import itmasters.project.stem.repository.TopicRepository;
+import itmasters.project.stem.repository.attachment.PictureAttachmentRepository;
+import itmasters.project.stem.repository.attachment.PictureRepository;
+import itmasters.project.stem.repository.attachment.ThreeDGraphicsAttachmentRepository;
+import itmasters.project.stem.repository.attachment.ThreeDGraphicsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,17 +26,26 @@ import java.util.Optional;
 public class SectionService {
 
     private final TopicRepository topicRepository;
-    private final SubjectRepository subjectRepository;
     private final SectionRepository sectionRepository;
+    private final PictureRepository pictureRepository;
+    private final PictureAttachmentRepository pictureAttachmentRepository;
+    private final ThreeDGraphicsRepository threeDGraphicsRepository;
+    private final ThreeDGraphicsAttachmentRepository threeDGraphicsAttachmentRepository;
 
     public SectionService(
             TopicRepository topicRepository,
-            SubjectRepository subjectRepository,
-            SectionRepository sectionRepository
+            SectionRepository sectionRepository,
+            PictureRepository pictureRepository,
+            PictureAttachmentRepository pictureAttachmentRepository,
+            ThreeDGraphicsRepository threeDGraphicsRepository,
+            ThreeDGraphicsAttachmentRepository threeDGraphicsAttachmentRepository
     ) {
         this.topicRepository = topicRepository;
-        this.subjectRepository = subjectRepository;
         this.sectionRepository = sectionRepository;
+        this.pictureRepository = pictureRepository;
+        this.pictureAttachmentRepository = pictureAttachmentRepository;
+        this.threeDGraphicsRepository = threeDGraphicsRepository;
+        this.threeDGraphicsAttachmentRepository = threeDGraphicsAttachmentRepository;
     }
 
     public List<Section> getAllSection() {
@@ -39,7 +56,7 @@ public class SectionService {
         return sectionRepository.findById(sectionId).orElseThrow();
     }
 
-    public Section createSection(Integer topicId, SectionDTO sectionDTO) {
+    public Section createSection(Integer topicId, SectionDTO sectionDTO) throws IOException {
         Optional<Topic> optionalTopic = topicRepository.findById(topicId);
         if (optionalTopic.isEmpty()) {
             throw new RuntimeException();
@@ -49,7 +66,33 @@ public class SectionService {
         section.setText(sectionDTO.getText());
         section.setVideoUrl(sectionDTO.getVideoUrl());
         section.setTopic(optionalTopic.get());
-        return sectionRepository.save(section);
+        Section savedSection = sectionRepository.save(section);
+
+        Picture picture1 = new Picture();
+        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
+        picture1.setContentType(sectionDTO.getPicture().getContentType());
+        picture1.setSize(sectionDTO.getPicture().getSize());
+        picture1.setSection(savedSection);
+        Picture savedPicture = pictureRepository.save(picture1);
+
+        PictureAttachment pictureAttachment = new PictureAttachment();
+        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
+        pictureAttachment.setPicture(savedPicture);
+        pictureAttachmentRepository.save(pictureAttachment);
+
+        ThreeDGraphics threeDGraphics = new ThreeDGraphics();
+        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
+        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
+        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
+        threeDGraphics.setSection(savedSection);
+        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
+
+        ThreeDGraphicsAttachment threeDGraphicsAttachment = new ThreeDGraphicsAttachment();
+        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
+        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
+        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
+
+        return savedSection;
     }
 
     public Section updateSection(Integer sectionId, SectionDTO sectionDTO) {
@@ -61,6 +104,10 @@ public class SectionService {
         updatedSection.setTitle(sectionDTO.getTitle());
         updatedSection.setText(sectionDTO.getText());
         updatedSection.setVideoUrl(sectionDTO.getVideoUrl());
+        Section savedSection = sectionRepository.save(updatedSection);
+
+
+
         return sectionRepository.save(updatedSection);
     }
 

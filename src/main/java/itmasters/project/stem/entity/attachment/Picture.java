@@ -1,6 +1,5 @@
 package itmasters.project.stem.entity.attachment;
 
-
 import itmasters.project.stem.entity.Section;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
