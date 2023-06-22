@@ -94,10 +94,10 @@ public class SectionService {
         return savedSection;
     }
 
-    public Section updateSection(Integer sectionId, SectionDTO sectionDTO) {
+    public Section updateSection(Integer sectionId, SectionDTO sectionDTO) throws IOException {
         Optional<Section> optionalSection = sectionRepository.findById(sectionId);
         if (optionalSection.isEmpty()) {
-            throw new RuntimeException();
+            throw new IOException();
         }
         Section updatedSection = optionalSection.get();
         updatedSection.setTitle(sectionDTO.getTitle());
@@ -105,9 +105,46 @@ public class SectionService {
         updatedSection.setVideoUrl(sectionDTO.getVideoUrl());
         Section savedSection = sectionRepository.save(updatedSection);
 
+        Integer pictureBySectionId = pictureRepository.findPictureBySectionId(sectionId);
+        if (pictureBySectionId.equals(0)) {
+            throw new IOException();
+        }
+        Picture picture1 = pictureRepository.findById(pictureBySectionId).orElseThrow();
+        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
+        picture1.setContentType(sectionDTO.getPicture().getContentType());
+        picture1.setSize(sectionDTO.getPicture().getSize());
+        picture1.setSection(savedSection);
+        Picture savedPicture = pictureRepository.save(picture1);
 
+        Integer pictureAttachmentId = pictureAttachmentRepository.findPictureAttachmentByPictureId(pictureBySectionId);
+        if (pictureAttachmentId.equals(0)) {
+            throw new IOException();
+        }
+        PictureAttachment pictureAttachment = pictureAttachmentRepository.findById(pictureAttachmentId).orElseThrow();
+        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
+        pictureAttachment.setPicture(savedPicture);
+        pictureAttachmentRepository.save(pictureAttachment);
 
-        return sectionRepository.save(updatedSection);
+        Integer threeDGraphicsBySectionId = threeDGraphicsRepository.findThreeDGraphicsBySectionId(sectionId);
+        if (threeDGraphicsBySectionId.equals(0)) {
+            throw new IOException();
+        }
+        ThreeDGraphics threeDGraphics = threeDGraphicsRepository.findById(threeDGraphicsBySectionId).orElseThrow();
+        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
+        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
+        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
+        threeDGraphics.setSection(savedSection);
+        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
+
+        Integer threeDGraphicsAttachmentByThreeDGraphicsId =
+                threeDGraphicsAttachmentRepository.findThreeDGraphicsAttachmentByThreeDGraphicsId(threeDGraphicsBySectionId);
+        ThreeDGraphicsAttachment threeDGraphicsAttachment =
+                threeDGraphicsAttachmentRepository.findById(threeDGraphicsAttachmentByThreeDGraphicsId).orElseThrow();
+        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
+        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
+        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
+
+        return savedSection;
     }
 
     public String deleteSection(Integer sectionId) {
