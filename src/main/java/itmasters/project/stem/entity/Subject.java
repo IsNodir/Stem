@@ -34,5 +34,4 @@ public class Subject {
 
     private int coins;
 
-
 }

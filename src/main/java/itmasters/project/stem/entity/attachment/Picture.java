@@ -1,5 +1,7 @@
-package itmasters.project.stem.entity;
+package itmasters.project.stem.entity.attachment;
 
+
+import itmasters.project.stem.entity.Section;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,20 +12,20 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "topic")
-public class Topic {
+@Entity(name = "picture")
+public class Picture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String topicName;
+    private String fileOriginalName;
 
-    private String coins;
+    private String contentType;
 
-    private double quizResult;
+    private long size;
 
-    @ManyToOne
-    private Subject subject;
+    @OneToOne
+    private Section section;
 
 }

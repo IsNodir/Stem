@@ -1,4 +1,5 @@
-package itmasters.project.stem.entity;
+package itmasters.project.stem.entity.attachment;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,20 +11,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "topic")
-public class Topic {
+@Entity(name = "three_d_graphics_attachment")
+public class ThreeDGraphicsAttachment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String topicName;
+    private byte[] bytes;
 
-    private String coins;
-
-    private double quizResult;
-
-    @ManyToOne
-    private Subject subject;
+    @OneToOne
+    private Picture picture;
 
 }

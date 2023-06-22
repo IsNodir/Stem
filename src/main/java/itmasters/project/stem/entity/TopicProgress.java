@@ -6,28 +6,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "quiz")
-public class Quiz {
+@Entity(name = "topic_course")
+public class TopicProgress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String question;
+    private int quizResult;
 
-    private String correctAnswer;
-
-    private String incorrectAnswer1;
-
-    private String incorrectAnswer2;
-
-    private String incorrectAnswer3;
+    private boolean isCompleted;
 
     @ManyToOne
     private Topic topic;
+
+    @ManyToOne
+    private Quiz quiz;
+
+    @ManyToOne
+    private TakenSubject takenSubject;
 
 }
