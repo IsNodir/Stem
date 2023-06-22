@@ -8,9 +8,9 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/v1/private/ai")
-public class AIController {
+public class AiController {
 
-    public AIController(RestTemplate template) {
+    public AiController(RestTemplate template) {
         this.template = template;
     }
 
