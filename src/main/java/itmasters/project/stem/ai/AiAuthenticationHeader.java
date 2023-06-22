@@ -7,13 +7,13 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AiAuthenticationHeader {
 
-    private final String openAIApiKey = "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";
+    private final String aiApiKey = "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";
 
     @Bean
     public RestTemplate template(){
         RestTemplate restTemplate=new RestTemplate();
         restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer " + openAIApiKey);
+            request.getHeaders().add("Authorization", "Bearer " + aiApiKey);
             return execution.execute(request, body);
         });
         return restTemplate;
