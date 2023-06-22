@@ -33,12 +33,10 @@ public class QuizService {
     }
 
     public Quiz createQuiz(Integer topicId, QuizDTO quizDTO) {
-
         Optional<Topic> optionalTopic = topicRepository.findById(topicId);
         if (optionalTopic.isEmpty()) {
             throw new RuntimeException();
         }
-
         Quiz quiz = new Quiz();
         quiz.setQuestion(quizDTO.getQuestion());
         quiz.setCorrectAnswer(quizDTO.getCorrectAnswer());
@@ -46,36 +44,30 @@ public class QuizService {
         quiz.setIncorrectAnswer2(quizDTO.getIncorrectAnswer2());
         quiz.setIncorrectAnswer3(quizDTO.getIncorrectAnswer3());
         quiz.setTopic(optionalTopic.get());
-
         return quizRepository.save(quiz);
     }
 
     public Quiz updateQuiz(Integer quizId, QuizDTO quizDTO) {
-
         Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
         if (optionalQuiz.isEmpty()) {
             throw new RuntimeException();
         }
-
         Quiz updatedQuiz = optionalQuiz.get();
         updatedQuiz.setQuestion(quizDTO.getQuestion());
         updatedQuiz.setCorrectAnswer(quizDTO.getCorrectAnswer());
         updatedQuiz.setIncorrectAnswer1(quizDTO.getIncorrectAnswer1());
         updatedQuiz.setIncorrectAnswer2(quizDTO.getIncorrectAnswer2());
         updatedQuiz.setIncorrectAnswer3(quizDTO.getIncorrectAnswer3());
-
         return quizRepository.save(updatedQuiz);
     }
 
     public String deleteQuiz(Integer sectionId) {
-
         Optional<Quiz> optionalSection = quizRepository.findById(sectionId);
         if (optionalSection.isEmpty()) {
             throw new RuntimeException();
         }
-
         quizRepository.deleteById(optionalSection.get().getId());
-
         return "Quiz deleted successfully";
     }
+
 }
