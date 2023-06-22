@@ -19,7 +19,7 @@ public class QuizController {
     }
 
     @GetMapping
-    public HttpEntity<?> getAllQuiz() {
+    public HttpEntity<?> getAllQuiz(@PathVariable String topic) {
         try {
             return ResponseEntity.ok(quizService.getAllQuiz());
         } catch (Exception e) {
@@ -29,7 +29,8 @@ public class QuizController {
     }
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getQuizById(@PathVariable Integer id) {
+    public HttpEntity<?> getQuizById(@PathVariable Integer id,
+                                     @PathVariable String topic) {
         try {
             return ResponseEntity.ok(quizService.getQuizById(id));
         } catch (Exception e) {
@@ -39,7 +40,9 @@ public class QuizController {
     }
 
     @PostMapping("/{id}")
-    public HttpEntity<?> addQuiz(@PathVariable Integer id, @RequestBody QuizDTO quizDTO) {
+    public HttpEntity<?> addQuiz(@PathVariable Integer id,
+                                 @RequestBody QuizDTO quizDTO,
+                                 @PathVariable String topic) {
         try {
             return ResponseEntity.status(201).body(quizService.createQuiz(id, quizDTO));
         } catch (Exception e) {
@@ -49,7 +52,9 @@ public class QuizController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> updateQuiz(@PathVariable Integer id, @RequestBody QuizDTO quizDTO) {
+    public HttpEntity<?> updateQuiz(@PathVariable Integer id,
+                                    @RequestBody QuizDTO quizDTO,
+                                    @PathVariable String topic) {
         try {
             return ResponseEntity.status(202).body(quizService.updateQuiz(id, quizDTO));
         } catch (Exception e) {
@@ -59,7 +64,8 @@ public class QuizController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteQuiz(@PathVariable Integer id) {
+    public HttpEntity<?> deleteQuiz(@PathVariable Integer id,
+                                    @PathVariable String topic) {
         try {
             return ResponseEntity.ok(quizService.deleteQuiz(id));
         } catch (Exception e) {
