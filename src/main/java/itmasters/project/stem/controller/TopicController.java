@@ -1,28 +1,28 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.entity.Subject;
-import itmasters.project.stem.payload.SubjectDTO;
-import itmasters.project.stem.service.SubjectService;
+import itmasters.project.stem.entity.Topic;
+import itmasters.project.stem.payload.TopicDTO;
+import itmasters.project.stem.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/subject")
+@RequestMapping("/api/v1/topic")
 @Slf4j
-public class SubjectController {
+public class TopicController {
 
-    private final SubjectService subjectService;
+    private final TopicService topicService;
 
-    public SubjectController(SubjectService subjectService) {
-        this.subjectService = subjectService;
+    public TopicController(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     @GetMapping
-    public HttpEntity<?> getAllSubject() {
+    public HttpEntity<?> getAllTopic() {
         try {
-            return ResponseEntity.ok(subjectService.getAllSubject());
+            return ResponseEntity.ok(topicService.getAllTopic());
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -30,19 +30,19 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getSubjectById(@PathVariable Integer id) {
+    public HttpEntity<?> getTopicById(@PathVariable Integer id) {
         try {
-            return ResponseEntity.ok(subjectService.getSubjectById(id));
+            return ResponseEntity.ok(topicService.getTopicById(id));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @PostMapping
-    public HttpEntity<?> addSubject(@RequestBody Subject subject) {
+    @PostMapping("/{id}")
+    public HttpEntity<?> addTopic(@PathVariable Integer id, @RequestBody TopicDTO topicDTO) {
         try {
-            return ResponseEntity.status(201).body(subjectService.createSubject(subject));
+            return ResponseEntity.status(201).body(topicService.createTopic(id, topicDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -50,9 +50,9 @@ public class SubjectController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> updateSubject(@PathVariable Integer id, @RequestBody SubjectDTO subjectDTO) {
+    public HttpEntity<?> updateTopic(@PathVariable Integer id, @RequestBody TopicDTO topicDTO) {
         try {
-            return ResponseEntity.status(202).body(subjectService.updateSubject(id, subjectDTO));
+            return ResponseEntity.status(202).body(topicService.updateTopic(id, topicDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -60,9 +60,9 @@ public class SubjectController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteSubject(@PathVariable Integer id) {
+    public HttpEntity<?> deleteTopic(@PathVariable Integer id) {
         try {
-            return ResponseEntity.ok(subjectService.deleteSubject(id));
+            return ResponseEntity.ok(topicService.deleteTopic(id));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
