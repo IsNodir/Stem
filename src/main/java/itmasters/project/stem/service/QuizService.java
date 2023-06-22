@@ -1,7 +1,6 @@
 package itmasters.project.stem.service;
 
 import itmasters.project.stem.entity.Quiz;
-import itmasters.project.stem.entity.Section;
 import itmasters.project.stem.entity.Topic;
 import itmasters.project.stem.payload.QuizDTO;
 import itmasters.project.stem.repository.QuizRepository;
@@ -68,7 +67,7 @@ public class QuizService {
         return quizRepository.save(updatedQuiz);
     }
 
-    public String deleteSection(Integer sectionId) {
+    public String deleteQuiz(Integer sectionId) {
 
         Optional<Quiz> optionalSection = quizRepository.findById(sectionId);
         if (optionalSection.isEmpty()) {

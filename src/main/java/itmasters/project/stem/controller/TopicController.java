@@ -1,6 +1,5 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.entity.Topic;
 import itmasters.project.stem.payload.TopicDTO;
 import itmasters.project.stem.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/topic")
+@RequestMapping("/api/v1/subject/topic")
 @Slf4j
 public class TopicController {
 
