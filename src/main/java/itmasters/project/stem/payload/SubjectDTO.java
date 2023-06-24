@@ -14,7 +14,9 @@ import java.sql.Date;
 @NoArgsConstructor
 public class SubjectDTO {
 
-    private String subjectName;
+    private String subjectNameUz;
+
+    private String subjectNameEn;
 
     private double price;
 

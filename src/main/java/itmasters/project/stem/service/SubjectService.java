@@ -3,7 +3,6 @@ package itmasters.project.stem.service;
 import itmasters.project.stem.entity.Subject;
 import itmasters.project.stem.payload.SubjectDTO;
 import itmasters.project.stem.repository.SubjectRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,8 @@ public class SubjectService {
             throw new RuntimeException();
         }
         Subject updatedSubject = optionalSubject.get();
-        updatedSubject.setSubjectName(subjectDTO.getSubjectName());
+        updatedSubject.setSubjectNameUz(subjectDTO.getSubjectNameUz());
+        updatedSubject.setSubjectNameEn(subjectDTO.getSubjectNameEn());
         updatedSubject.setPrice(subjectDTO.getPrice());
         updatedSubject.setStreak(subjectDTO.getStreak());
         updatedSubject.setStreakFirstDay(subjectDTO.getStreakFirstDay());

@@ -17,11 +17,11 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String topicName;
+    private String topicNameUz;
+
+    private String topicNameEn;
 
     private String coins;
-
-    private double quizResult;
 
     @ManyToOne
     private Subject subject;

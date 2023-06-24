@@ -40,9 +40,9 @@ public class TopicService {
             throw new RuntimeException();
         }
         Topic topic = new Topic();
-        topic.setTopicName(topicDTO.getTopicName());
+        topic.setTopicNameUz(topicDTO.getTopicNameUz());
+        topic.setTopicNameEn(topicDTO.getTopicNameEn());
         topic.setCoins(topicDTO.getCoins());
-        topic.setQuizResult(topicDTO.getQuizResult());
         topic.setSubject(optionalSubject.get());
         return topicRepository.save(topic);
     }
@@ -54,9 +54,9 @@ public class TopicService {
             throw new RuntimeException();
         }
         Topic updatedTopic = optionalTopic.get();
-        updatedTopic.setTopicName(topicDTO.getTopicName());
+        updatedTopic.setTopicNameUz(topicDTO.getTopicNameUz());
+        updatedTopic.setTopicNameEn(topicDTO.getTopicNameEn());
         updatedTopic.setCoins(topicDTO.getCoins());
-        updatedTopic.setQuizResult(topicDTO.getQuizResult());
         return topicRepository.save(updatedTopic);
     }
 

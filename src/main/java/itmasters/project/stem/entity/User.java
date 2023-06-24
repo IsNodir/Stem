@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "user")
+@Entity(name = "_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +29,7 @@ public class User {
 
     private String phoneNumber;
 
+//    @Enumerated(EnumType.STRING)
     private UserRole role;
+
 }

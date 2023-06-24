@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "topic_course")
+@Entity(name = "topic_progress")
 public class TopicProgress {
 
     @Id

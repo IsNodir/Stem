@@ -13,9 +13,19 @@ public class TranslatorService {
         this.authHeader = authHeader;
     }
 
-    public Object translate(String text) {
+    public Object translateUzEn(String text) {
         try {
             TranslatorResponse translatorResponse = authHeader.UzEn(text);
+            return translatorResponse.getText();
+        } catch (Exception e) {
+            log.error("error: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    public Object translateEnUz(String text) {
+        try {
+            TranslatorResponse translatorResponse = authHeader.EnUz(text);
             return translatorResponse.getText();
         } catch (Exception e) {
             log.error("error: {}", e.getMessage());

@@ -19,10 +19,20 @@ public class TranslatorController {
         this.translatorService = translatorService;
     }
 
-    @PostMapping
-    public HttpEntity<?> translate(@RequestParam String text) {
+    @PostMapping("/uz-en")
+    public HttpEntity<?> translateUzEn(@RequestParam String text) {
         try {
-            return ResponseEntity.status(201).body(translatorService.translate(text));
+            return ResponseEntity.status(201).body(translatorService.translateUzEn(text));
+        } catch (Exception e) {
+            log.error("error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/en-uz")
+    public HttpEntity<?> translateEnUz(@RequestParam String text) {
+        try {
+            return ResponseEntity.status(201).body(translatorService.translateEnUz(text));
         } catch (Exception e) {
             log.error("error: {}", e.getMessage());
             return ResponseEntity.internalServerError().build();

@@ -1,6 +1,5 @@
 package itmasters.project.stem.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,12 +10,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "taken_course")
+@Entity(name = "taken_subject")
 public class TakenSubject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private boolean isCompleted = false;
 
     @ManyToOne
     private User user;

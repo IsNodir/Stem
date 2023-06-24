@@ -14,11 +14,11 @@ import java.sql.Date;
 @NoArgsConstructor
 public class TopicDTO {
 
-    private String topicName;
+    private String topicNameUz;
+
+    private String topicNameEn;
 
     private String coins;
-
-    private double quizResult;
 
     private Integer subjectId;
 

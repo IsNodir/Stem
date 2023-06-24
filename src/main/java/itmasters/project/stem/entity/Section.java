@@ -16,11 +16,10 @@ public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String title;
-
-    private String text;
-
+    private String titleUz;
+    private String titleEn;
+    private String textUz;
+    private String textEn;
     private String videoUrl;
 
     @ManyToOne

@@ -12,9 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class SectionDTO {
 
-    private String title;
+    private String titleUz;
 
-    private String text;
+    private String titleEn;
+
+    private String textUz;
+
+    private String textEn;
 
     private String videoUrl;
 

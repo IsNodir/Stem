@@ -23,15 +23,17 @@ public class Subject {
 
     @NotNull
     @Column(unique = true)
-    private String subjectName;
+    private String subjectNameUz;
+
+    private String subjectNameEn;
 
     private double price;
 
     private int streak;
 
+    private int coins;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date streakFirstDay;
-
-    private int coins;
 
 }

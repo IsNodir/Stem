@@ -61,8 +61,10 @@ public class SectionService {
             throw new RuntimeException();
         }
         Section section = new Section();
-        section.setTitle(sectionDTO.getTitle());
-        section.setText(sectionDTO.getText());
+        section.setTitleUz(sectionDTO.getTitleUz());
+        section.setTitleEn(sectionDTO.getTitleEn());
+        section.setTextUz(sectionDTO.getTextUz());
+        section.setTextEn(sectionDTO.getTextEn());
         section.setVideoUrl(sectionDTO.getVideoUrl());
         section.setTopic(optionalTopic.get());
         Section savedSection = sectionRepository.save(section);
@@ -100,8 +102,10 @@ public class SectionService {
             throw new IOException();
         }
         Section updatedSection = optionalSection.get();
-        updatedSection.setTitle(sectionDTO.getTitle());
-        updatedSection.setText(sectionDTO.getText());
+        updatedSection.setTitleUz(sectionDTO.getTitleUz());
+        updatedSection.setTitleEn(sectionDTO.getTitleEn());
+        updatedSection.setTextUz(sectionDTO.getTextUz());
+        updatedSection.setTextEn(sectionDTO.getTextEn());
         updatedSection.setVideoUrl(sectionDTO.getVideoUrl());
         Section savedSection = sectionRepository.save(updatedSection);
 

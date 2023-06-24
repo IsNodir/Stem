@@ -1,21 +1,13 @@
-package itmasters.project.stem.entity;
+package itmasters.project.stem.payload.Quiz;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "quiz")
-public class Quiz {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class QuizDTO {
 
     private String questionUz;
 
@@ -40,8 +32,5 @@ public class Quiz {
     private String answer4Uz;
 
     private String answer4En;
-
-    @ManyToOne
-    private Topic topic;
 
 }

@@ -7,6 +7,8 @@ import java.util.List;
 @Data
 public class TranslatorResponse {
     int code;
+
     String lang;
+
     List<String> text;
 }
