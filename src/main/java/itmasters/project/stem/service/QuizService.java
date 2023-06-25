@@ -55,11 +55,8 @@ public class QuizService {
         double correctCounter = 0;
 
         for (int i = 0; i < quizResult.size(); i++) {
-
             for (int j = 0; j < finishedQuiz.size(); j++) {
-
-                if (quizResult.get(i).getId() == finishedQuiz.get(j).getId()) {
-
+                if (quizResult.get(i).getId().equals(finishedQuiz.get(j).getId())) {
                     if(quizResult.get(i).getCorrectAnswer().equals(finishedQuiz.get(j).getUserAnswer())) {
                         quizResult.get(i).setCorrect(true);
                         correctCounter++;
@@ -67,9 +64,7 @@ public class QuizService {
                         quizResult.get(i).setCorrect(false);
                     }
                 }
-
             }
-
         }
 
         double result = correctCounter/quizResult.size();
@@ -116,12 +111,10 @@ public class QuizService {
     }
 
     public Quiz updateQuiz(Integer quizId, QuizDTO quizDTO) {
-
         Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
         if (optionalQuiz.isEmpty()) {
             throw new RuntimeException();
         }
-
         Quiz updatedQuiz = optionalQuiz.get();
         updatedQuiz.setQuestionUz(quizDTO.getQuestionUz());
         updatedQuiz.setQuestionEn(quizDTO.getQuestionEn());
@@ -135,19 +128,15 @@ public class QuizService {
         updatedQuiz.setAnswer3En(quizDTO.getAnswer3En());
         updatedQuiz.setAnswer4Uz(quizDTO.getAnswer4Uz());
         updatedQuiz.setAnswer4En(quizDTO.getAnswer4En());
-
         return quizRepository.save(updatedQuiz);
     }
 
     public String deleteQuiz(Integer sectionId) {
-
         Optional<Quiz> optionalSection = quizRepository.findById(sectionId);
         if (optionalSection.isEmpty()) {
             throw new RuntimeException();
         }
-
         quizRepository.deleteById(optionalSection.get().getId());
-
         return "Quiz deleted successfully";
     }
 
