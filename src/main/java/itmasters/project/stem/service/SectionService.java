@@ -51,6 +51,14 @@ public class SectionService {
         return sectionRepository.findAll();
     }
 
+    public List<Section> getAllSectionByTopicId(Integer topicId) {
+        Optional<Topic> selectedTopicId = topicRepository.findById(topicId);
+        if (selectedTopicId.isEmpty()) {
+            throw new RuntimeException();
+        }
+        return sectionRepository.getAllSectionByTopicId(topicId);
+    }
+
     public Section getSectionById(Integer sectionId) {
         return sectionRepository.findById(sectionId).orElseThrow();
     }

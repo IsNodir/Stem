@@ -29,40 +29,50 @@ public class SectionController {
         }
     }
 
-    @GetMapping("/{id}")
-    public HttpEntity<?> getSectionById(@PathVariable Integer id) {
+    @GetMapping("/{sectionId}")
+    public HttpEntity<?> getSectionById(@PathVariable Integer sectionId) {
         try {
-            return ResponseEntity.ok(sectionService.getSectionById(id));
+            return ResponseEntity.ok(sectionService.getSectionById(sectionId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @PostMapping("/{id}")
-    public HttpEntity<?> addSection(@PathVariable Integer id, @RequestBody SectionDTO sectionDTO) {
+    @GetMapping("/{topicId}")
+    public HttpEntity<?> getAllSectionByTopicId(@PathVariable Integer topicId) {
         try {
-            return ResponseEntity.status(201).body(sectionService.createSection(id, sectionDTO));
+            return ResponseEntity.status(201).body(sectionService.getAllSectionByTopicId(topicId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public HttpEntity<?> updateSection(@PathVariable Integer id, @RequestBody SectionDTO sectionDTO) {
+    @PostMapping("/{topicId}")
+    public HttpEntity<?> addSection(@PathVariable Integer topicId, @RequestBody SectionDTO sectionDTO) {
         try {
-            return ResponseEntity.status(202).body(sectionService.updateSection(id, sectionDTO));
+            return ResponseEntity.status(201).body(sectionService.createSection(topicId, sectionDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteSection(@PathVariable Integer id) {
+    @PutMapping("/{sectionId}")
+    public HttpEntity<?> updateSection(@PathVariable Integer sectionId, @RequestBody SectionDTO sectionDTO) {
         try {
-            return ResponseEntity.ok(sectionService.deleteSection(id));
+            return ResponseEntity.status(202).body(sectionService.updateSection(sectionId, sectionDTO));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{sectionId}")
+    public HttpEntity<?> deleteSection(@PathVariable Integer sectionId) {
+        try {
+            return ResponseEntity.ok(sectionService.deleteSection(sectionId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

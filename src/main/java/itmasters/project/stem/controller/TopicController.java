@@ -38,10 +38,10 @@ public class TopicController {
         }
     }
 
-    @PostMapping("/{id}")
-    public HttpEntity<?> addTopic(@PathVariable Integer id, @RequestBody TopicDTO topicDTO) {
+    @PostMapping("/{subjectId}")
+    public HttpEntity<?> addTopic(@PathVariable Integer subjectId, @RequestBody TopicDTO topicDTO) {
         try {
-            return ResponseEntity.status(201).body(topicService.createTopic(id, topicDTO));
+            return ResponseEntity.status(201).body(topicService.createTopic(subjectId, topicDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

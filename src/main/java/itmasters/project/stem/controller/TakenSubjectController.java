@@ -1,6 +1,7 @@
 package itmasters.project.stem.controller;
 
 import itmasters.project.stem.entity.TakenSubject;
+import itmasters.project.stem.payload.TakenSubjectDTO;
 import itmasters.project.stem.service.TakenSubjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -48,20 +49,20 @@ public class TakenSubjectController {
         }
     }
 
-    @PostMapping("/new")
-    public HttpEntity<?> addTakenSubject(@RequestBody TakenSubject takenSubject) {
+    @PostMapping
+    public HttpEntity<?> addTakenSubject(@RequestBody TakenSubjectDTO takenSubjectDTO) {
         try {
-            return ResponseEntity.status(201).body(takenSubjectService.createTakenSubject(takenSubject));
+            return ResponseEntity.status(201).body(takenSubjectService.createTakenSubject(takenSubjectDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @PutMapping("/private/complete/{id}")
-    public HttpEntity<?> updateTakenSubject(@PathVariable Integer id) {
+    @PutMapping("/private/complete/{takenSubjectId}")
+    public HttpEntity<?> updateTakenSubject(@PathVariable Integer takenSubjectId) {
         try {
-            return ResponseEntity.status(202).body(takenSubjectService.updateTakenSubject(id));
+            return ResponseEntity.status(202).body(takenSubjectService.updateTakenSubject(takenSubjectId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
