@@ -3,6 +3,8 @@ package itmasters.project.stem.translator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class TranslatorService {
@@ -13,7 +15,7 @@ public class TranslatorService {
         this.authHeader = authHeader;
     }
 
-    public Object translateUzEn(String text) {
+    public List<String> translateUzEn(String text) {
         try {
             TranslatorResponse translatorResponse = authHeader.UzEn(text);
             return translatorResponse.getText();
@@ -23,7 +25,7 @@ public class TranslatorService {
         }
     }
 
-    public Object translateEnUz(String text) {
+    public List<String> translateEnUz(String text) {
         try {
             TranslatorResponse translatorResponse = authHeader.EnUz(text);
             return translatorResponse.getText();
