@@ -69,10 +69,10 @@ public class TakenSubjectController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteTakenSubject(@PathVariable Integer id) {
+    @DeleteMapping("/{takenSubjectId}")
+    public HttpEntity<?> deleteTakenSubject(@PathVariable Integer takenSubjectId) {
         try {
-            return ResponseEntity.ok(takenSubjectService.deleteTakenSubject(id));
+            return ResponseEntity.ok(takenSubjectService.deleteTakenSubject(takenSubjectId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
