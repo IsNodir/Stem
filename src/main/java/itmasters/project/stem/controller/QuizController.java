@@ -3,6 +3,7 @@ package itmasters.project.stem.controller;
 import itmasters.project.stem.payload.Quiz.FinishedQuiz;
 import itmasters.project.stem.payload.Quiz.QuizDTO;
 import itmasters.project.stem.service.QuizService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -66,9 +67,10 @@ public class QuizController {
     @PostMapping("/{language}/check/{topicId}")
     public HttpEntity<?> checkQuiz(@PathVariable Integer topicId,
                                    @PathVariable String language,
-                                   @RequestBody List<FinishedQuiz> finishedQuiz) {
+                                   @RequestBody List<FinishedQuiz> finishedQuiz,
+                                   HttpServletRequest request) {
         try {
-            return ResponseEntity.status(201).body(quizService.getQuizResult(topicId, finishedQuiz, language));
+            return ResponseEntity.status(201).body(quizService.getQuizResult(topicId, finishedQuiz, language, request));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -95,4 +97,5 @@ public class QuizController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package itmasters.project.stem.entity;
 
+import itmasters.project.stem.security.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

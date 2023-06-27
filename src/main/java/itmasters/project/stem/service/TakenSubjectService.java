@@ -2,11 +2,11 @@ package itmasters.project.stem.service;
 
 import itmasters.project.stem.entity.Subject;
 import itmasters.project.stem.entity.TakenSubject;
-import itmasters.project.stem.entity.User;
 import itmasters.project.stem.payload.TakenSubjectDTO;
 import itmasters.project.stem.repository.SubjectRepository;
 import itmasters.project.stem.repository.TakenSubjectRepository;
-import itmasters.project.stem.repository.UserRepository;
+import itmasters.project.stem.security.user.User;
+import itmasters.project.stem.security.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

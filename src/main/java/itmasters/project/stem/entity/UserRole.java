@@ -1,5 +1,5 @@
-package itmasters.project.stem.entity;
-
-public enum UserRole {
-    user, admin, superadmin
-}
+//package itmasters.project.stem.entity;
+//
+//public enum UserRole {
+//    user, admin, superadmin
+//}

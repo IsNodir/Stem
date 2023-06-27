@@ -2,32 +2,40 @@ package itmasters.project.stem.service;
 
 import itmasters.project.stem.entity.Quiz;
 import itmasters.project.stem.entity.Topic;
+import itmasters.project.stem.entity.TopicProgress;
 import itmasters.project.stem.payload.Quiz.FinishedQuiz;
 import itmasters.project.stem.payload.Quiz.QuizDTO;
 import itmasters.project.stem.payload.Quiz.QuizEn;
 import itmasters.project.stem.payload.Quiz.QuizResult;
 import itmasters.project.stem.repository.QuizRepository;
+import itmasters.project.stem.repository.TopicProgressRepository;
 import itmasters.project.stem.repository.TopicRepository;
+import itmasters.project.stem.security.config.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.nio.BufferOverflowException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
 public class QuizService {
 
     private final QuizRepository quizRepository;
-
     private final TopicRepository topicRepository;
+    private final TopicProgressRepository topicProgressRepository;
+    private final JwtService jwtService;
 
-    public QuizService(QuizRepository quizRepository, TopicRepository topicRepository) {
+    public QuizService(
+            QuizRepository quizRepository,
+            TopicRepository topicRepository,
+            TopicProgressRepository topicProgressRepository,
+            JwtService jwtService) {
         this.quizRepository = quizRepository;
         this.topicRepository = topicRepository;
+        this.topicProgressRepository = topicProgressRepository;
+        this.jwtService = jwtService;
     }
 
     public List<Quiz> getAllQuiz() {
@@ -38,13 +46,18 @@ public class QuizService {
         return quizRepository.findById(sectionId).orElseThrow();
     }
 
-    QuizResult quizResult;
-
-    public Map<String, Object> getQuizResult(Integer topicId, List<FinishedQuiz> finishedQuiz, String language) {
+    public Map<String, Object> getQuizResult(
+            Integer topicId,
+            List<FinishedQuiz> finishedQuiz,
+            String language,
+            HttpServletRequest request
+    ) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
 
         List<QuizResult> quizResult;
 
-        if(language.equals("uz")) {
+        if (language.equals("uz")) {
             quizResult = quizRepository.getCorrectAnswersUz(topicId);
         } else if (language.equals("en")) {
             quizResult = quizRepository.getCorrectAnswersEn(topicId);
@@ -57,7 +70,7 @@ public class QuizService {
         for (int i = 0; i < quizResult.size(); i++) {
             for (int j = 0; j < finishedQuiz.size(); j++) {
                 if (quizResult.get(i).getId().equals(finishedQuiz.get(j).getId())) {
-                    if(quizResult.get(i).getCorrectAnswer().equals(finishedQuiz.get(j).getUserAnswer())) {
+                    if (quizResult.get(i).getCorrectAnswer().equals(finishedQuiz.get(j).getUserAnswer())) {
                         quizResult.get(i).setCorrect(true);
                         correctCounter++;
                     } else {
@@ -67,12 +80,25 @@ public class QuizService {
             }
         }
 
-        double result = correctCounter/quizResult.size();
+        double result = correctCounter / quizResult.size() * 100;
 
         Map<String, Object> returnResult = new HashMap<>();
         returnResult.put("answers", quizResult);
         returnResult.put("result", result);
         return returnResult;
+    }
+
+    public TopicProgress getQuizResultsAndSuggestTopics(Integer topicId) {
+
+        topicProgressRepository.findByTopicId(topicId);
+        TopicProgress topicProgress = new TopicProgress();
+
+        if (topicProgress.getQuizResult() <= 80) {
+            List<Integer> failedSections = new ArrayList<>();
+            failedSections.add(0);
+        }
+
+        return null;
     }
 
     public Quiz createQuiz(Integer topicId, QuizDTO quizDTO) {
