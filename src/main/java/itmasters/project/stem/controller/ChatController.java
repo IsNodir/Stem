@@ -18,7 +18,7 @@ public class ChatController {
     }
 
     @PostMapping("/uz")
-    public HttpEntity<?> uzChat(@RequestParam String message) {
+    public HttpEntity<?> uzChat(@RequestBody String message) {
         try {
             return ResponseEntity.status(201).body(chatService.uzChat(message));
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @PostMapping("/en")
-    public HttpEntity<?> enChat(@RequestParam String message) {
+    public HttpEntity<?> enChat(@RequestBody String message) {
         try {
             return ResponseEntity.status(201).body(chatService.enChat(message));
         } catch (Exception e) {

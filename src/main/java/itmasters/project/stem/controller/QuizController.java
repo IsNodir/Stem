@@ -22,16 +22,6 @@ public class QuizController {
         this.quizService = quizService;
     }
 
-    @GetMapping
-    public HttpEntity<?> getAllQuiz(@PathVariable String topic) {
-        try {
-            return ResponseEntity.ok(quizService.getAllQuiz());
-        } catch (Exception e) {
-            log.error("Error: {}", e.getMessage());
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
-
     @GetMapping("/{language}/{topicId}")
     public HttpEntity<?> getQuiz(@PathVariable Integer topicId,
                                  @PathVariable String language) {

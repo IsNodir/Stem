@@ -4,6 +4,8 @@ import itmasters.project.stem.ai.AiRequest;
 import itmasters.project.stem.ai.AiResponse;
 import itmasters.project.stem.translator.TranslatorService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,9 +30,12 @@ public class ChatService {
 
     private final String aiApiURL = "https://api.openai.com/v1/chat/completions";
 
-    public List<String> uzChat (String message) {
+    public List<String> uzChat (String message) throws JSONException {
 
-        AiRequest aiRequest = new AiRequest(aiModel, translatorService.translateUzEn(message).get(0));
+        JSONObject jsonObject = new JSONObject(message);
+        String finalMessage = jsonObject.getString("message");
+
+        AiRequest aiRequest = new AiRequest(aiModel, translatorService.translateUzEn(finalMessage).toString());
         AiResponse aiResponse = template.postForObject(aiApiURL, aiRequest, AiResponse.class);
         assert aiResponse != null;
 
@@ -39,9 +44,12 @@ public class ChatService {
         return translatorService.translateEnUz(enMessage);
     }
 
-    public String enChat (String message) {
+    public String enChat (String message) throws JSONException {
 
-        AiRequest aiRequest = new AiRequest(aiModel, message);
+        JSONObject jsonObject = new JSONObject(message);
+        String finalMessage = jsonObject.getString("message");
+
+        AiRequest aiRequest = new AiRequest(aiModel, finalMessage);
         AiResponse aiResponse = template.postForObject(aiApiURL, aiRequest, AiResponse.class);
         assert aiResponse != null;
 
