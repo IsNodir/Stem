@@ -43,42 +43,33 @@ public class TakenSubjectService {
         return takenSubjectRepository.findById(subjectId).orElseThrow();
     }
 
-    public TakenSubject createTakenSubject(TakenSubjectDTO takenSubjectDTO) {
-        User optionalUser = userRepository.findById(takenSubjectDTO.getUserId()).orElseThrow();
-        Subject optionalSubject = subjectRepository.findById(takenSubjectDTO.getSubjectId()).orElseThrow();
+    public Object createTakenSubject(TakenSubjectDTO takenSubjectDTO) {
+        User user = userRepository.findById(takenSubjectDTO.getUserId()).orElseThrow();
+        Subject subject = subjectRepository.findById(takenSubjectDTO.getSubjectId()).orElseThrow();
+        boolean byUserIdAndSubjectId = takenSubjectRepository.findByUserIdAndSubjectId(user.getId(), subject.getId());
+        if (byUserIdAndSubjectId) return "This subject is taken";
         TakenSubject takenSubject = new TakenSubject();
         takenSubject.setCompleted(false);
-        takenSubject.setUser(optionalUser);
-        takenSubject.setSubject(optionalSubject);
+        takenSubject.setUser(user);
+        takenSubject.setSubject(subject);
         return takenSubjectRepository.save(takenSubject);
     }
 
     public TakenSubject updateTakenSubject(Integer takenSubjectId) {
         Optional<TakenSubject> optionalTakenSubject = takenSubjectRepository.findById(takenSubjectId);
-
-        if (optionalTakenSubject.isEmpty()) {
-            throw new RuntimeException();
-        }
-
+        if (optionalTakenSubject.isEmpty()) throw new RuntimeException();
         TakenSubject updatedTakenSubject = optionalTakenSubject.get();
         updatedTakenSubject.setSubject(optionalTakenSubject.get().getSubject());
         updatedTakenSubject.setUser(optionalTakenSubject.get().getUser());
         updatedTakenSubject.setCompleted(true);
-
         return takenSubjectRepository.save(updatedTakenSubject);
     }
 
     public String deleteTakenSubject(Integer subjectId) {
         Optional<TakenSubject> optionalSubject = takenSubjectRepository.findById(subjectId);
-
-        if (optionalSubject.isEmpty()) {
-            throw new RuntimeException();
-        }
-
+        if (optionalSubject.isEmpty()) throw new RuntimeException();
         takenSubjectRepository.deleteById(optionalSubject.get().getId());
-
         return "Taken subject deleted successfully";
     }
-
 
 }

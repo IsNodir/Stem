@@ -65,7 +65,7 @@ public class QuizService {
             throw new RuntimeException();
         }
 
-        double correctCounter = 0;
+        int correctCounter = 0;
 
         for (int i = 0; i < quizResult.size(); i++) {
             for (int j = 0; j < finishedQuiz.size(); j++) {
@@ -80,7 +80,15 @@ public class QuizService {
             }
         }
 
-        double result = correctCounter / quizResult.size() * 100;
+        int result = correctCounter / quizResult.size() * 100;
+
+        TopicProgress topicProgress = new TopicProgress();
+        topicProgress.setQuizResult(result);
+        topicProgress.setCompleted(result >= 80);
+        topicProgress.setTopic(topicRepository.findById(topicId).orElseThrow());
+//        topicProgress.setQuiz("");
+//        topicProgress.setTakenSubject();
+
 
         Map<String, Object> returnResult = new HashMap<>();
         returnResult.put("answers", quizResult);
