@@ -1,6 +1,7 @@
-package itmasters.project.stem.payload;
+package itmasters.project.stem.payload.subject;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import itmasters.project.stem.payload.TopicDTO;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,5 +28,7 @@ public class SubjectDTO {
     private Date streakFirstDay;
 
     private int coins;
+
+    private List<TopicDTO> topics;
 
 }

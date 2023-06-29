@@ -1,5 +1,6 @@
 package itmasters.project.stem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class Quiz {
     private String answer4En;
 
     @ManyToOne
+    @JsonIgnore
     private Topic topic;
 
 }

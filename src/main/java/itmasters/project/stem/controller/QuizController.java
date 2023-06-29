@@ -1,7 +1,7 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.payload.Quiz.FinishedQuiz;
-import itmasters.project.stem.payload.Quiz.QuizDTO;
+import itmasters.project.stem.payload.quiz.FinishedQuiz;
+import itmasters.project.stem.payload.quiz.QuizDTO;
 import itmasters.project.stem.service.QuizService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,32 @@ public class QuizController {
                                  @PathVariable String language) {
         try {
             return ResponseEntity.ok(quizService.checkLanguage(topicId, language));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{language}/{topicId}/topicId")
+    public HttpEntity<?> getAllQuizByTopicId(
+            @PathVariable Integer topicId,
+            @PathVariable String language
+    ) {
+        try {
+            return ResponseEntity.ok(quizService.getAllQuizByTopicId(topicId, language));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{language}/{subjectId}/subject")
+    public HttpEntity<?> getAllQuizBySubjectId(
+            @PathVariable Integer subjectId,
+            @PathVariable String language
+    ) {
+        try {
+            return ResponseEntity.ok(quizService.getQuizBySubjectId(subjectId, language));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

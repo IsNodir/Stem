@@ -1,16 +1,17 @@
 package itmasters.project.stem.service;
 
-import itmasters.project.stem.entity.Quiz;
-import itmasters.project.stem.entity.Topic;
-import itmasters.project.stem.entity.TopicProgress;
-import itmasters.project.stem.payload.Quiz.FinishedQuiz;
-import itmasters.project.stem.payload.Quiz.QuizDTO;
-import itmasters.project.stem.payload.Quiz.QuizEn;
-import itmasters.project.stem.payload.Quiz.QuizResult;
+import itmasters.project.stem.entity.*;
+import itmasters.project.stem.payload.quiz.FinishedQuiz;
+import itmasters.project.stem.payload.quiz.QuizDTO;
+import itmasters.project.stem.payload.quiz.QuizEn;
+import itmasters.project.stem.payload.quiz.QuizResultDTO;
 import itmasters.project.stem.repository.QuizRepository;
+import itmasters.project.stem.repository.SubjectRepository;
 import itmasters.project.stem.repository.TopicProgressRepository;
 import itmasters.project.stem.repository.TopicRepository;
 import itmasters.project.stem.security.config.JwtService;
+import itmasters.project.stem.security.user.User;
+import itmasters.project.stem.security.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,23 @@ public class QuizService {
     private final TopicRepository topicRepository;
     private final TopicProgressRepository topicProgressRepository;
     private final JwtService jwtService;
+    private final SubjectRepository subjectRepository;
+    private final UserRepository userRepository;
 
     public QuizService(
             QuizRepository quizRepository,
             TopicRepository topicRepository,
             TopicProgressRepository topicProgressRepository,
-            JwtService jwtService) {
+            JwtService jwtService,
+            SubjectRepository subjectRepository,
+            UserRepository userRepository
+    ) {
         this.quizRepository = quizRepository;
         this.topicRepository = topicRepository;
         this.topicProgressRepository = topicProgressRepository;
         this.jwtService = jwtService;
+        this.subjectRepository = subjectRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Quiz> getAllQuiz() {
@@ -55,8 +63,7 @@ public class QuizService {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = jwtService.extractUsername(token);
 
-        List<QuizResult> quizResult;
-
+        List<QuizResultDTO> quizResult;
         if (language.equals("uz")) {
             quizResult = quizRepository.getCorrectAnswersUz(topicId);
         } else if (language.equals("en")) {
@@ -66,7 +73,6 @@ public class QuizService {
         }
 
         int correctCounter = 0;
-
         for (int i = 0; i < quizResult.size(); i++) {
             for (int j = 0; j < finishedQuiz.size(); j++) {
                 if (quizResult.get(i).getId().equals(finishedQuiz.get(j).getId())) {
@@ -80,20 +86,35 @@ public class QuizService {
             }
         }
 
-        int result = correctCounter / quizResult.size() * 100;
+        int result = (correctCounter / quizResult.size()) * 100;
+
+        Integer subjectId = topicRepository.findSubjectByTopicId(topicId);
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow();
+        Integer userId = userRepository.findIdByUsername(username);
+        User user = userRepository.findUserByUserId(userId);
+        if (result >= 80) {
+            user.setCoins(user.getCoins() + result / 2);
+        }
+        List<Quiz> quizList = quizRepository.findByTopicId(topicId);
+
+        TakenSubject takenSubject = new TakenSubject();
+        takenSubject.setCompleted(false);
+        takenSubject.setSubject(subject);
+        takenSubject.setUser(user);
 
         TopicProgress topicProgress = new TopicProgress();
-        topicProgress.setQuizResult(result);
+        topicProgress.setResult(result);
         topicProgress.setCompleted(result >= 80);
         topicProgress.setTopic(topicRepository.findById(topicId).orElseThrow());
-//        topicProgress.setQuiz("");
-//        topicProgress.setTakenSubject();
-
+        topicProgress.setQuiz(quizList);
+        topicProgress.setTakenSubject(takenSubject);
+        topicProgressRepository.save(topicProgress);
 
         Map<String, Object> returnResult = new HashMap<>();
         returnResult.put("answers", quizResult);
         returnResult.put("result", result);
         return returnResult;
+
     }
 
     public TopicProgress getQuizResultsAndSuggestTopics(Integer topicId) {
@@ -101,11 +122,11 @@ public class QuizService {
         topicProgressRepository.findByTopicId(topicId);
         TopicProgress topicProgress = new TopicProgress();
 
-        if (topicProgress.getQuizResult() <= 80) {
-            List<Integer> failedSections = new ArrayList<>();
+        List<Integer> failedSections = new ArrayList<>();
+        if (topicProgress.getResult() <= 80) {
             failedSections.add(0);
         }
-
+        System.out.println("failedSections = " + failedSections);
         return null;
     }
 
@@ -141,7 +162,8 @@ public class QuizService {
     }
 
     public Object checkLanguage(Integer topicId, String language) {
-        return language.equals("uz") ? quizRepository.getUzLanguage(topicId) : (language.equals("en") ? quizRepository.getEnLanguage(topicId) : null);
+        return language.equals("uz") ? quizRepository.getUzLanguage(topicId) :
+                (language.equals("en") ? quizRepository.getEnLanguage(topicId) : null);
     }
 
     public Quiz updateQuiz(Integer quizId, QuizDTO quizDTO) {
@@ -172,6 +194,16 @@ public class QuizService {
         }
         quizRepository.deleteById(optionalSection.get().getId());
         return "Quiz deleted successfully";
+    }
+
+    public Subject getQuizBySubjectId(Integer subjectId, String language) {
+        return subjectRepository.findById(subjectId).orElseThrow();
+//        return null;
+    }
+
+    public Topic getAllQuizByTopicId(Integer topicId, String language) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow();
+        return topic;
     }
 
 }

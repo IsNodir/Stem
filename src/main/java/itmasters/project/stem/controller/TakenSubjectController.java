@@ -1,8 +1,8 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.entity.TakenSubject;
-import itmasters.project.stem.payload.TakenSubjectDTO;
+import itmasters.project.stem.payload.takenSubject.TakenSubjectDTO;
 import itmasters.project.stem.service.TakenSubjectService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,9 @@ public class TakenSubjectController {
         this.takenSubjectService = takenSubjectService;
     }
 
-    @GetMapping
-    public HttpEntity<?> getAllTakenSubjects() {
+    //berilmidi
+    @GetMapping("/{language}")
+    public HttpEntity<?> getAllTakenSubjects(@PathVariable String language) {
         try {
             return ResponseEntity.ok(takenSubjectService.getAllTakenSubjects());
         } catch (Exception e) {
@@ -29,8 +30,9 @@ public class TakenSubjectController {
         }
     }
 
-    @GetMapping("/{id}")
-    public HttpEntity<?> getTakenSubjectById(@PathVariable Integer id) {
+    //berilmidi
+    @GetMapping("/{language}/{id}")
+    public HttpEntity<?> getTakenSubjectById(@PathVariable String language, @PathVariable Integer id) {
         try {
             return ResponseEntity.ok(takenSubjectService.getTakenSubjectById(id));
         } catch (Exception e) {
@@ -39,10 +41,31 @@ public class TakenSubjectController {
         }
     }
 
-    @GetMapping("/current/{userId}")
-    public HttpEntity<?> getCurrentTakenSubjects(@PathVariable Integer userId) {
+    //berilmidi
+    @GetMapping("/{language}/current/{userId}")
+    public HttpEntity<?> getCurrentTakenSubjects(@PathVariable String language, @PathVariable Integer userId) {
         try {
             return ResponseEntity.ok(takenSubjectService.getCurrentTakenSubjects(userId));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{language}/completed")
+    public HttpEntity<?> getCompletedSubjects(@PathVariable String language, HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(takenSubjectService.getAllCompletedSubjects(language, request));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{language}/taken")
+    public HttpEntity<?> getTakenSubjects(@PathVariable String language, HttpServletRequest request) {
+        try {
+            return ResponseEntity.ok(takenSubjectService.getTakenSubjects(language, request));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -59,8 +82,9 @@ public class TakenSubjectController {
         }
     }
 
+    //TODO: Implement with topic progress service
     @PutMapping("/private/complete/{takenSubjectId}")
-    public HttpEntity<?> updateTakenSubject(@PathVariable Integer takenSubjectId) {
+    public HttpEntity<?> updateTakenSubject(@PathVariable Integer takenSubjectId, HttpServletRequest request) {
         try {
             return ResponseEntity.status(202).body(takenSubjectService.updateTakenSubject(takenSubjectId));
         } catch (Exception e) {
@@ -78,4 +102,6 @@ public class TakenSubjectController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
+
+
 }

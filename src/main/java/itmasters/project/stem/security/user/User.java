@@ -18,8 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "_user")
+@Entity(name = "_user")
 public class User implements UserDetails {
 
     @Id
@@ -37,6 +36,8 @@ public class User implements UserDetails {
     private String password;
 
     private String phoneNumber;
+
+    private Integer coins;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,5 +36,8 @@ public class Subject {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date streakFirstDay;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<Topic> topics;
 
 }

@@ -1,4 +1,4 @@
-package itmasters.project.stem.payload.Quiz;
+package itmasters.project.stem.payload.quiz;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package itmasters.project.stem.entity;
 
+import itmasters.project.stem.payload.quiz.QuizResultDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,15 +20,15 @@ public class TopicProgress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private int quizResult;
+    private int result;
 
     private boolean isCompleted;
 
     @ManyToOne
     private Topic topic;
 
-    @ManyToOne
-    private Quiz quiz;
+    @ManyToMany
+    private List<Quiz> quiz;
 
     @ManyToOne
     private TakenSubject takenSubject;

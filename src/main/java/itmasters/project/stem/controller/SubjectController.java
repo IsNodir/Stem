@@ -1,7 +1,7 @@
 package itmasters.project.stem.controller;
 
 import itmasters.project.stem.entity.Subject;
-import itmasters.project.stem.payload.SubjectDTO;
+import itmasters.project.stem.payload.subject.SubjectDTO;
 import itmasters.project.stem.service.SubjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -23,6 +23,16 @@ public class SubjectController {
     public HttpEntity<?> getAllSubject() {
         try {
             return ResponseEntity.ok(subjectService.getAllSubject());
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{language}/language")
+    public HttpEntity<?> getAllSubjectByLanguage(@PathVariable String language) {
+        try {
+            return ResponseEntity.ok(subjectService.getAllSubjectByLanguage(language));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

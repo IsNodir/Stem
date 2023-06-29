@@ -1,4 +1,4 @@
-package itmasters.project.stem.payload;
+package itmasters.project.stem.payload.takenSubject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
