@@ -35,4 +35,7 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
     private List<Quiz> quiz;
 
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    private List<Section> section;
+
 }

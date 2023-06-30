@@ -1,7 +1,5 @@
 package itmasters.project.stem.payload;
 
-import itmasters.project.stem.entity.Topic;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

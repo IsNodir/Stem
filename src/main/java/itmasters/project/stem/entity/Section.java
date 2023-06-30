@@ -1,5 +1,8 @@
 package itmasters.project.stem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import itmasters.project.stem.entity.attachment.Picture;
+import itmasters.project.stem.entity.attachment.ThreeDGraphics;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +31,13 @@ public class Section {
     private String videoUrl;
 
     @ManyToOne
+    @JsonIgnore
     private Topic topic;
+
+    @OneToOne
+    private Picture picture;
+
+    @OneToOne
+    private ThreeDGraphics threeDGraphics;
 
 }

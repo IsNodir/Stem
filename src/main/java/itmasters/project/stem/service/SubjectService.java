@@ -173,7 +173,6 @@ public class SubjectService {
         String json2 = gson.toJson(subjectList.get(2));
         System.out.println("json2 = " + json2);
 
-
         for (Subject subject : subjectList) {
             String json = gson.toJson(subject);
             System.out.println("json = " + json);
