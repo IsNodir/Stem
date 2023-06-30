@@ -26,6 +26,8 @@ public class Topic {
 
     private String coins;
 
+    private Integer earnCoins;
+
     @ManyToOne
     @JsonIgnore
     private Subject subject;

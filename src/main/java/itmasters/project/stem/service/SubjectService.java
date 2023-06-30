@@ -2,11 +2,23 @@ package itmasters.project.stem.service;
 
 import com.google.gson.Gson;
 import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.TakenSubject;
+import itmasters.project.stem.entity.Topic;
+import itmasters.project.stem.entity.TopicProgress;
 import itmasters.project.stem.payload.subject.SubjectDTO;
 import itmasters.project.stem.payload.subject.SubjectEn;
 import itmasters.project.stem.payload.subject.SubjectUz;
+import itmasters.project.stem.payload.takenSubject.IsCompletedResponse;
 import itmasters.project.stem.repository.SubjectRepository;
+import itmasters.project.stem.repository.TakenSubjectRepository;
+import itmasters.project.stem.repository.TopicProgressRepository;
+import itmasters.project.stem.repository.TopicRepository;
+import itmasters.project.stem.security.config.JwtService;
+import itmasters.project.stem.security.user.User;
+import itmasters.project.stem.security.user.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +27,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,9 +34,26 @@ import java.util.Optional;
 public class SubjectService {
 
     private final SubjectRepository subjectRepository;
+    private final UserRepository userRepository;
+    private final TopicProgressRepository topicProgressRepository;
+    private final TopicRepository topicRepository;
+    private final JwtService jwtService;
+    private final TakenSubjectRepository takenSubjectRepository;
 
-    public SubjectService(SubjectRepository subjectRepository) {
+    public SubjectService(
+            SubjectRepository subjectRepository,
+            UserRepository userRepository,
+            TopicProgressRepository topicProgressRepository,
+            TopicRepository topicRepository,
+            JwtService jwtService,
+            TakenSubjectRepository takenSubjectRepository
+    ) {
         this.subjectRepository = subjectRepository;
+        this.userRepository = userRepository;
+        this.topicProgressRepository = topicProgressRepository;
+        this.topicRepository = topicRepository;
+        this.jwtService = jwtService;
+        this.takenSubjectRepository = takenSubjectRepository;
     }
 
     public List<Subject> getAllSubject() {
@@ -130,12 +158,11 @@ public class SubjectService {
     }
 
 
-
     public Object getAllSubjectByLanguage(String language) throws JSONException {
         List<Subject> subjectList = subjectRepository.findAll();
 
         Gson gson = new Gson();
-            String json1 = gson.toJson(subjectList.get(0));
+        String json1 = gson.toJson(subjectList.get(0));
         System.out.println("json1 = " + json1);
         String json3 = gson.toJson(subjectList.get(3));
         System.out.println("json3 = " + json3);
@@ -236,6 +263,93 @@ public class SubjectService {
         }
         subjectRepository.deleteById(optionalSubject.get().getId());
         return "Subject deleted successfully";
+    }
+
+    public IsCompletedResponse isSubjectCompleted(String language, Integer subjectId, @NotNull HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        Integer userId = userRepository.findIdByUsername(username);
+        User user = userRepository.findById(userId).orElseThrow();
+        String subjectNameUz = subjectRepository.findSubjectNameUzBySubjectId(subjectId);
+        String subjectNameEn = subjectRepository.findSubjectNameEnBySubjectId(subjectId);
+        TakenSubject takenSubject = takenSubjectRepository.findByUserIdAndSubjectId(userId, subjectId).orElseThrow();
+        if (takenSubject.toString().isEmpty()) {
+            return null;
+        }
+
+        if (language.equals("uz")) {
+            List<String> passedTopicUz = new ArrayList<>();
+            List<String> failedTopicUz = new ArrayList<>();
+            List<Topic> topicList = topicRepository.findAllTopicsBySubjectId(subjectId);
+            for (int i = 0; i < topicList.size(); i++) {
+                Integer topicId = topicList.get(i).getId();
+                String topicNameUz = topicRepository.findTopicNameUzByTopicId(topicId);
+                TopicProgress topicProgress = topicProgressRepository.findByTopicAndUser_Id(topicId, userId);
+                if (topicProgress == null) {
+                    takenSubject.setCompleted(false);
+                    break;
+                }
+                log.info("topicProgress: {}", topicProgress);
+                if (topicProgress.isCompleted()) {
+                    passedTopicUz.add(topicNameUz);
+                } else {
+                    failedTopicUz.add(topicNameUz);
+                }
+            }
+            log.info("passedTopicUz: {}", passedTopicUz);
+            if (failedTopicUz.isEmpty()) {
+                takenSubject.setCompleted(true);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameUz)
+                        .isCompleted(true)
+                        .build();
+            } else {
+                takenSubject.setCompleted(false);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameUz)
+                        .isCompleted(true)
+                        .build();
+            }
+        } else if (language.equals("en")) {
+            List<String> passedTopicEn = new ArrayList<>();
+            List<String> failedTopicEn = new ArrayList<>();
+            List<Topic> topicList = topicRepository.findAllTopicsBySubjectId(subjectId);
+            for (int i = 0; i < topicList.size(); i++) {
+                Integer topicId = topicList.get(i).getId();
+                String topicNameEn = topicRepository.findTopicNameEnByTopicId(topicId);
+                TopicProgress topicProgress = topicProgressRepository.findByTopicAndUser_Id(topicId, userId);
+                if (topicProgress.isCompleted()) {
+                    passedTopicEn.add(topicNameEn);
+                } else {
+                    failedTopicEn.add(topicNameEn);
+                }
+            }
+            log.info("passedTopicEn: {}", passedTopicEn);
+            if (failedTopicEn.isEmpty()) {
+                takenSubject.setCompleted(true);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameEn)
+                        .isCompleted(true)
+                        .build();
+            } else {
+                takenSubject.setCompleted(false);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameEn)
+                        .isCompleted(true)
+                        .build();
+            }
+        }
+
+        return null;
+
     }
 
 }

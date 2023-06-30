@@ -2,13 +2,11 @@ package itmasters.project.stem.entity;
 
 import itmasters.project.stem.security.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "taken_subject")

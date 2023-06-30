@@ -3,6 +3,7 @@ package itmasters.project.stem.controller;
 import itmasters.project.stem.entity.Section;
 import itmasters.project.stem.payload.SectionDTO;
 import itmasters.project.stem.service.SectionService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;

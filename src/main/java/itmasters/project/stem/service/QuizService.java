@@ -1,14 +1,13 @@
 package itmasters.project.stem.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import itmasters.project.stem.entity.*;
 import itmasters.project.stem.payload.quiz.FinishedQuiz;
 import itmasters.project.stem.payload.quiz.QuizDTO;
 import itmasters.project.stem.payload.quiz.QuizEn;
 import itmasters.project.stem.payload.quiz.QuizResultDTO;
-import itmasters.project.stem.repository.QuizRepository;
-import itmasters.project.stem.repository.SubjectRepository;
-import itmasters.project.stem.repository.TopicProgressRepository;
-import itmasters.project.stem.repository.TopicRepository;
+import itmasters.project.stem.payload.topicProgress.TopicProgressResponse;
+import itmasters.project.stem.repository.*;
 import itmasters.project.stem.security.config.JwtService;
 import itmasters.project.stem.security.user.User;
 import itmasters.project.stem.security.user.UserRepository;
@@ -29,6 +28,7 @@ public class QuizService {
     private final JwtService jwtService;
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
+    private final TakenSubjectRepository takenSubjectRepository;
 
     public QuizService(
             QuizRepository quizRepository,
@@ -36,14 +36,15 @@ public class QuizService {
             TopicProgressRepository topicProgressRepository,
             JwtService jwtService,
             SubjectRepository subjectRepository,
-            UserRepository userRepository
-    ) {
+            UserRepository userRepository,
+            TakenSubjectRepository takenSubjectRepository) {
         this.quizRepository = quizRepository;
         this.topicRepository = topicRepository;
         this.topicProgressRepository = topicProgressRepository;
         this.jwtService = jwtService;
         this.subjectRepository = subjectRepository;
         this.userRepository = userRepository;
+        this.takenSubjectRepository = takenSubjectRepository;
     }
 
     public List<Quiz> getAllQuiz() {
@@ -62,6 +63,18 @@ public class QuizService {
     ) {
         String token = request.getHeader("Authorization").replace("Bearer ", "");
         String username = jwtService.extractUsername(token);
+
+        Integer subjectId = topicRepository.findSubjectByTopicId(topicId);
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow();
+        Integer userId = userRepository.findIdByUsername(username);
+        User user = userRepository.findUserByUserId(userId);
+
+        Optional<TopicProgress> isDone = topicProgressRepository.findByTopicIdAndUserId(topicId, userId);
+        if (isDone.isPresent()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "you successfully finished this topic");
+            return response;
+        }
 
         List<QuizResultDTO> quizResult;
         if (language.equals("uz")) {
@@ -86,28 +99,19 @@ public class QuizService {
             }
         }
 
-        int result = (correctCounter / quizResult.size()) * 100;
+        double result = ((double) correctCounter / quizResult.size()) * 100;
 
-        Integer subjectId = topicRepository.findSubjectByTopicId(topicId);
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow();
-        Integer userId = userRepository.findIdByUsername(username);
-        User user = userRepository.findUserByUserId(userId);
         if (result >= 80) {
-            user.setCoins(user.getCoins() + result / 2);
+            user.setCoins((int) ((user.getCoins() == null ? 0 : user.getCoins()) + result / 2));
         }
         List<Quiz> quizList = quizRepository.findByTopicId(topicId);
 
-        TakenSubject takenSubject = new TakenSubject();
-        takenSubject.setCompleted(false);
-        takenSubject.setSubject(subject);
-        takenSubject.setUser(user);
-
         TopicProgress topicProgress = new TopicProgress();
-        topicProgress.setResult(result);
+        topicProgress.setResult((int) result);
         topicProgress.setCompleted(result >= 80);
         topicProgress.setTopic(topicRepository.findById(topicId).orElseThrow());
+        topicProgress.setUserId(userId);
         topicProgress.setQuiz(quizList);
-        topicProgress.setTakenSubject(takenSubject);
         topicProgressRepository.save(topicProgress);
 
         Map<String, Object> returnResult = new HashMap<>();
@@ -117,17 +121,22 @@ public class QuizService {
 
     }
 
-    public TopicProgress getQuizResultsAndSuggestTopics(Integer topicId) {
-
-        topicProgressRepository.findByTopicId(topicId);
-        TopicProgress topicProgress = new TopicProgress();
-
-        List<Integer> failedSections = new ArrayList<>();
-        if (topicProgress.getResult() <= 80) {
-            failedSections.add(0);
-        }
-        System.out.println("failedSections = " + failedSections);
-        return null;
+    public TopicProgressResponse getQuizResultsAndSuggestTopics(Integer topicId, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        Integer userId = userRepository.findIdByUsername(username);
+        TopicProgress topicProgress = topicProgressRepository.findByTopicIdAndUserIdForTakeResult(topicId, userId);
+        topicProgress.setId(topicProgress.getId());
+        topicProgress.setResult(topicProgress.getResult());
+        topicProgress.setUserId(topicProgress.getUserId());
+        topicProgress.setCompleted(topicProgress.isCompleted());
+        topicProgress.setTopic(topicProgress.getTopic());
+        topicProgress.setQuiz(topicProgress.getQuiz());
+        return TopicProgressResponse.builder()
+                .result(topicProgress.getResult())
+                .userId(topicProgress.getUserId())
+                .isCompleted(topicProgress.isCompleted())
+                .build();
     }
 
     public Quiz createQuiz(Integer topicId, QuizDTO quizDTO) {

@@ -69,6 +69,19 @@ public class QuizController {
         }
     }
 
+    @GetMapping("/{topicId}/result")
+    public HttpEntity<?> getQuizResultByTopicId(
+            @PathVariable Integer topicId,
+            HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity.ok(quizService.getQuizResultsAndSuggestTopics(topicId, request));
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/{topicId}")
     public HttpEntity<?> addQuiz(@PathVariable Integer topicId,
                                  @RequestBody QuizDTO quizDTO) {

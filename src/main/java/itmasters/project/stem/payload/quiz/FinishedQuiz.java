@@ -12,4 +12,5 @@ public class FinishedQuiz {
     private Integer id;
 
     private String userAnswer;
+
 }
