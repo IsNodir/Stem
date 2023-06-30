@@ -35,8 +35,6 @@ public class User implements UserDetails {
 
     private String password;
 
-    private String phoneNumber;
-
     private Integer coins;
 
     @Enumerated(value = EnumType.STRING)
@@ -47,6 +45,7 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @NotNull
     @Override
     public String getUsername() {
         return username;
@@ -71,4 +70,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

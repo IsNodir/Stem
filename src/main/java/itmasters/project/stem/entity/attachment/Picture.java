@@ -27,4 +27,7 @@ public class Picture {
     @OneToOne
     private Section section;
 
+    @OneToOne
+    private PictureAttachment pictureAttachment;
+
 }

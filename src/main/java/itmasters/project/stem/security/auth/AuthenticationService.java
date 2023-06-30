@@ -34,7 +34,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authentication(AuthenticationRequest request) {
+    public SignUpResponse authentication(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -44,8 +44,10 @@ public class AuthenticationService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        return SignUpResponse.builder()
                 .token(jwtToken)
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 

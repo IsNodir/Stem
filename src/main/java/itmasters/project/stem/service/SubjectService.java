@@ -296,6 +296,16 @@ public class SubjectService {
                     failedTopicUz.add(topicNameUz);
                 }
             }
+
+            if (topicList.size() != passedTopicUz.size() + failedTopicUz.size() || topicList.isEmpty()) {
+                takenSubject.setCompleted(false);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameUz)
+                        .isCompleted(false)
+                        .build();
+            }
             log.info("passedTopicUz: {}", passedTopicUz);
             if (failedTopicUz.isEmpty()) {
                 takenSubject.setCompleted(true);
@@ -311,7 +321,7 @@ public class SubjectService {
                 return IsCompletedResponse.builder()
                         .userName(user.getFirstName() + " " + user.getLastName())
                         .subjectName(subjectNameUz)
-                        .isCompleted(true)
+                        .isCompleted(false)
                         .build();
             }
         } else if (language.equals("en")) {
@@ -328,6 +338,15 @@ public class SubjectService {
                     failedTopicEn.add(topicNameEn);
                 }
             }
+            if (topicList.size() != passedTopicEn.size() + failedTopicEn.size() || topicList.isEmpty()) {
+                takenSubject.setCompleted(false);
+                takenSubjectRepository.save(takenSubject);
+                return IsCompletedResponse.builder()
+                        .userName(user.getFirstName() + " " + user.getLastName())
+                        .subjectName(subjectNameEn)
+                        .isCompleted(false)
+                        .build();
+            }
             log.info("passedTopicEn: {}", passedTopicEn);
             if (failedTopicEn.isEmpty()) {
                 takenSubject.setCompleted(true);
@@ -343,13 +362,75 @@ public class SubjectService {
                 return IsCompletedResponse.builder()
                         .userName(user.getFirstName() + " " + user.getLastName())
                         .subjectName(subjectNameEn)
-                        .isCompleted(true)
+                        .isCompleted(false)
                         .build();
             }
         }
 
         return null;
 
+    }
+
+    public IsCompletedResponse isSubjectCompleted1(
+            String language, Integer subjectId,
+            @NotNull HttpServletRequest request
+    ) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        Integer userId = userRepository.findIdByUsername(username);
+        User user = userRepository.findById(userId).orElseThrow();
+
+        TakenSubject takenSubject = takenSubjectRepository.findByUserIdAndSubjectId(userId, subjectId)
+                .orElseThrow();
+
+        if (takenSubject.toString().isEmpty()) {
+            return null;
+        }
+
+        String subjectName = getSubjectNameByLanguageAndSubjectId(language, subjectId);
+        List<String> passedTopics, failedTopics;
+        if (language.equals("uz")) {
+            passedTopics = new ArrayList<>();
+            failedTopics = new ArrayList<>();
+            checkTopics(language, userId, subjectId, passedTopics, failedTopics);
+        } else {
+            passedTopics = new ArrayList<>();
+            failedTopics = new ArrayList<>();
+            checkTopics(language, userId, subjectId, passedTopics, failedTopics);
+        }
+
+        boolean isCompleted = (failedTopics.isEmpty()) ? true : false;
+        takenSubject.setCompleted(isCompleted);
+        takenSubjectRepository.save(takenSubject);
+
+        return IsCompletedResponse.builder()
+                .userName(user.getFirstName() + " " + user.getLastName())
+                .subjectName(subjectName)
+                .isCompleted(isCompleted)
+                .build();
+    }
+
+    private String getSubjectNameByLanguageAndSubjectId(String language, Integer subjectId) {
+        return language.equals("uz") ? subjectRepository.findSubjectNameUzBySubjectId(subjectId)
+                : language.equals("en") ? subjectRepository.findSubjectNameEnBySubjectId(subjectId) : null;
+    }
+
+    private void checkTopics(String language, Integer userId, Integer subjectId,
+                             List<String> passedTopics, List<String> failedTopics) {
+        List<Topic> topicList = topicRepository.findAllTopicsBySubjectId(subjectId);
+        for (Topic topic : topicList) {
+            Integer topicId = topic.getId();
+            String topicName = language.equals("uz") ? topicRepository.findTopicNameUzByTopicId(topicId)
+                    : language.equals("en") ? topicRepository.findTopicNameEnByTopicId(topicId) : null;
+
+            TopicProgress topicProgress = topicProgressRepository.findByTopicAndUser_Id(topicId, userId);
+
+            if (topicProgress.isCompleted()) {
+                passedTopics.add(topicName);
+            } else {
+                failedTopics.add(topicName);
+            }
+        }
     }
 
 }
