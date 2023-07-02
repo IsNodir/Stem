@@ -29,7 +29,6 @@ public class QuizService {
     private final JwtService jwtService;
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
-    private final TakenSubjectRepository takenSubjectRepository;
 
     public QuizService(
             QuizRepository quizRepository,
@@ -37,15 +36,14 @@ public class QuizService {
             TopicProgressRepository topicProgressRepository,
             JwtService jwtService,
             SubjectRepository subjectRepository,
-            UserRepository userRepository,
-            TakenSubjectRepository takenSubjectRepository) {
+            UserRepository userRepository
+    ) {
         this.quizRepository = quizRepository;
         this.topicRepository = topicRepository;
         this.topicProgressRepository = topicProgressRepository;
         this.jwtService = jwtService;
         this.subjectRepository = subjectRepository;
         this.userRepository = userRepository;
-        this.takenSubjectRepository = takenSubjectRepository;
     }
 
     public List<Quiz> getAllQuiz() {

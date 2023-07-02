@@ -1,6 +1,7 @@
 package itmasters.project.stem.entity.subject;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import itmasters.project.stem.entity.Topic;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +40,7 @@ public class Subject {
     private Date streakFirstDay;
 
     @OneToOne(mappedBy = "subject", cascade = CascadeType.ALL)
+    @JsonIgnore
     private SubjectAttachment subjectAttachment;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)

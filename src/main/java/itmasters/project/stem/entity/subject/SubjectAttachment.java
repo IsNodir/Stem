@@ -10,6 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "subject_attachment")
+//@NamedEntityGraph(name = "subject-with-attachment-and-content",
+//        attributeNodes = @NamedAttributeNode("subjectAttachmentContent"))
 public class SubjectAttachment {
 
     @Id
@@ -24,6 +26,7 @@ public class SubjectAttachment {
 
     @OneToOne
     @JoinColumn(name = "subject_id")
+    @JsonIgnore
     private Subject subject;
 
     @OneToOne(mappedBy = "subjectAttachment")

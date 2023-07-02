@@ -76,7 +76,7 @@ public class SubjectController {
     }
 
     @PostMapping
-    public HttpEntity<?> addSubject(@RequestBody SubjectDTO subjectDTO) {
+    public HttpEntity<?> addSubject(@ModelAttribute SubjectDTO subjectDTO) {
         try {
             return ResponseEntity.status(201).body(subjectService.createSubject(subjectDTO));
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class SubjectController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> updateSubject(@PathVariable Integer id, @RequestBody SubjectDTO subjectDTO) {
+    public HttpEntity<?> updateSubject(@PathVariable Integer id, @ModelAttribute SubjectDTO subjectDTO) {
         try {
             return ResponseEntity.status(202).body(subjectService.updateSubject(id, subjectDTO));
         } catch (Exception e) {

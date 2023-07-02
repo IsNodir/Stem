@@ -21,6 +21,9 @@ import itmasters.project.stem.repository.TopicRepository;
 import itmasters.project.stem.security.config.JwtService;
 import itmasters.project.stem.security.user.User;
 import itmasters.project.stem.security.user.UserRepository;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +51,9 @@ public class SubjectService {
     private final SubjectAttachmentRepository subjectAttachmentRepository;
     private final SubjectAttachmentContentRepository subjectAttachmentContentRepository;
 
+//    @PersistenceContext
+//    private EntityManager entityManager;
+
     public SubjectService(
             SubjectRepository subjectRepository,
             UserRepository userRepository,
@@ -71,16 +77,23 @@ public class SubjectService {
     public List<Subject> getAllSubject() {
         return subjectRepository.findAll();
     }
+
+    //    public Optional<Subject> getSubjectWithAttachmentAndContent(Integer id) {
+    //        EntityGraph<?> entityGraph = entityManager.getEntityGraph("subject-with-attachment-and-content");
+    //        return subjectRepository.findById(id, entityGraph);
+    //    }
+
     public List<SubjectResponse> getAllSubject1() {
         List<Subject> subjectList = subjectRepository.findAll();
         List<SubjectResponse> subjectResponseList = new ArrayList<>();
-        for (int i = 0; i < subjectList.size(); i++) {
+        for (Subject subject : subjectList) {
             SubjectResponse subjectResponse =
                     SubjectResponse
                             .builder()
-                            .subjectNameEn(subjectList.get(i).getSubjectNameUz())
-                            .topicCount(subjectList.get(i).getTopics().size())
-                            .subjectLogo(subjectList.get(i).getSubjectAttachment() == null ? null : subjectList.get(i).getSubjectAttachment().getSubjectAttachmentContent().getBytes())
+                            .subjectNameEn(subject.getSubjectNameEn())
+                            .topicCount(subject.getTopics().size())
+                            .subjectLogo(subject.getSubjectAttachment() == null ?
+                                    null : subject.getSubjectAttachment().getSubjectAttachmentContent().getBytes())
                             .build();
             subjectResponseList.add(subjectResponse);
         }
@@ -269,9 +282,9 @@ public class SubjectService {
         Subject subject = new Subject();
         subject.setSubjectNameEn(subjectDTO.getSubjectNameEn());
         subject.setSubjectNameUz(subjectDTO.getSubjectNameUz());
-        subject.setStreak(subject.getStreak());
-        subject.setPrice(subject.getPrice());
-        subject.setCoins(subject.getCoins());
+        subject.setStreak(subjectDTO.getStreak());
+        subject.setPrice(subjectDTO.getPrice());
+        subject.setCoins(subjectDTO.getCoins());
         subject.setStreakFirstDay(subjectDTO.getStreakFirstDay());
         Subject savedSubject = subjectRepository.save(subject);
 
