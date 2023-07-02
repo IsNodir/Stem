@@ -34,10 +34,10 @@ public class Section {
     @JsonIgnore
     private Topic topic;
 
-    @OneToOne
+    @OneToOne(mappedBy = "section")
     private Picture picture;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private ThreeDGraphics threeDGraphics;
 
 }

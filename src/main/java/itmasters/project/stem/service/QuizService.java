@@ -1,13 +1,14 @@
 package itmasters.project.stem.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import itmasters.project.stem.entity.*;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.payload.quiz.FinishedQuiz;
 import itmasters.project.stem.payload.quiz.QuizDTO;
 import itmasters.project.stem.payload.quiz.QuizEn;
 import itmasters.project.stem.payload.quiz.QuizResultDTO;
 import itmasters.project.stem.payload.topicProgress.TopicProgressResponse;
 import itmasters.project.stem.repository.*;
+import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.security.config.JwtService;
 import itmasters.project.stem.security.user.User;
 import itmasters.project.stem.security.user.UserRepository;

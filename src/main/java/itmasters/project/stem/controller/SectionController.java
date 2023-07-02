@@ -1,6 +1,6 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.payload.SectionDTO;
+import itmasters.project.stem.payload.section.SectionDTO;
 import itmasters.project.stem.service.SectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;

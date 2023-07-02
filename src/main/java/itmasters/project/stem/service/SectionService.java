@@ -6,7 +6,8 @@ import itmasters.project.stem.entity.attachment.Picture;
 import itmasters.project.stem.entity.attachment.PictureAttachment;
 import itmasters.project.stem.entity.attachment.ThreeDGraphics;
 import itmasters.project.stem.entity.attachment.ThreeDGraphicsAttachment;
-import itmasters.project.stem.payload.SectionDTO;
+import itmasters.project.stem.payload.section.SectionDTO;
+import itmasters.project.stem.payload.section.SectionResponse;
 import itmasters.project.stem.repository.SectionRepository;
 import itmasters.project.stem.repository.TopicRepository;
 import itmasters.project.stem.repository.attachment.PictureAttachmentRepository;
@@ -63,7 +64,7 @@ public class SectionService {
         return sectionRepository.findById(sectionId).orElseThrow();
     }
 
-    public Section createSection(Integer topicId, SectionDTO sectionDTO) throws IOException {
+    public SectionResponse createSection(Integer topicId, SectionDTO sectionDTO) throws IOException {
         Optional<Topic> optionalTopic = topicRepository.findById(topicId);
         if (optionalTopic.isEmpty()) {
             throw new RuntimeException();
@@ -101,7 +102,17 @@ public class SectionService {
         threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
         threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
 
-        return savedSection;
+        Picture picture = pictureAttachmentRepository.getPictureAndPictureAttachmentByPictureId(picture1.getId());
+        return SectionResponse.builder()
+                .titleUz(section.getTitleUz())
+                .titleEn(section.getTitleEn())
+                .textUz(section.getTextUz())
+                .textEn(section.getTextEn())
+                .videoUrl(section.getVideoUrl())
+                .topic(topicId)
+                .picture(picture1)
+                .threeDGraphics(threeDGraphics)
+                .build();
     }
 
     public Section updateSection(Integer sectionId, SectionDTO sectionDTO) throws IOException {

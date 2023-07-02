@@ -1,5 +1,6 @@
 package itmasters.project.stem.entity.attachment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import itmasters.project.stem.entity.Section;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class Picture {
     private long size;
 
     @OneToOne
+    @JsonIgnore
     private Section section;
 
     @OneToOne

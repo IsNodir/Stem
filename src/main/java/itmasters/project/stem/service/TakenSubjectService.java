@@ -1,10 +1,10 @@
 package itmasters.project.stem.service;
 
-import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.entity.TakenSubject;
 import itmasters.project.stem.payload.takenSubject.TakenSubjectDTO;
 import itmasters.project.stem.payload.takenSubject.TakenSubjectUz;
-import itmasters.project.stem.repository.SubjectRepository;
+import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.repository.TakenSubjectRepository;
 import itmasters.project.stem.security.config.JwtService;
 import itmasters.project.stem.security.user.User;

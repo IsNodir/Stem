@@ -1,6 +1,6 @@
 package itmasters.project.stem.controller;
 
-import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.payload.subject.SubjectDTO;
 import itmasters.project.stem.service.SubjectService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +24,16 @@ public class SubjectController {
     public HttpEntity<?> getAllSubject() {
         try {
             return ResponseEntity.ok(subjectService.getAllSubject());
+        } catch (Exception e) {
+            log.error("Error: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/list")
+    public HttpEntity<?> getAllSubjectList() {
+        try {
+            return ResponseEntity.ok(subjectService.getAllSubject1());
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -66,9 +76,9 @@ public class SubjectController {
     }
 
     @PostMapping
-    public HttpEntity<?> addSubject(@RequestBody Subject subject) {
+    public HttpEntity<?> addSubject(@RequestBody SubjectDTO subjectDTO) {
         try {
-            return ResponseEntity.status(201).body(subjectService.createSubject(subject));
+            return ResponseEntity.status(201).body(subjectService.createSubject(subjectDTO));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

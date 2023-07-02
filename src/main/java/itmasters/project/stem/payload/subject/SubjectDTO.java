@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 import java.util.List;
@@ -30,5 +31,7 @@ public class SubjectDTO {
     private int coins;
 
     private List<TopicDTO> topics;
+
+    private MultipartFile subjectLogo;
 
 }

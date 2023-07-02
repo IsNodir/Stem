@@ -1,6 +1,7 @@
-package itmasters.project.stem.entity;
+package itmasters.project.stem.entity.subject;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import itmasters.project.stem.entity.Topic;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,9 @@ public class Subject {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date streakFirstDay;
+
+    @OneToOne(mappedBy = "subject", cascade = CascadeType.ALL)
+    private SubjectAttachment subjectAttachment;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     private List<Topic> topics;

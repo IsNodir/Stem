@@ -1,6 +1,7 @@
 package itmasters.project.stem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import itmasters.project.stem.entity.subject.Subject;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

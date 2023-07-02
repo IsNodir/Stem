@@ -23,8 +23,10 @@ public class QuizController {
     }
 
     @GetMapping("/{language}/{topicId}")
-    public HttpEntity<?> getQuiz(@PathVariable Integer topicId,
-                                 @PathVariable String language) {
+    public HttpEntity<?> getQuiz(
+            @PathVariable Integer topicId,
+            @PathVariable String language
+    ) {
         try {
             return ResponseEntity.ok(quizService.checkLanguage(topicId, language));
         } catch (Exception e) {

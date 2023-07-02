@@ -1,14 +1,18 @@
-package itmasters.project.stem.payload;
+package itmasters.project.stem.payload.section;
 
+import itmasters.project.stem.entity.attachment.Picture;
+import itmasters.project.stem.entity.attachment.ThreeDGraphics;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SectionDTO {
+public class SectionResponse {
 
     private String titleUz;
 
@@ -22,8 +26,8 @@ public class SectionDTO {
 
     private Integer topic;
 
-    private MultipartFile picture;
+    private Picture picture;
 
-    private MultipartFile threeDGraphics;
+    private ThreeDGraphics threeDGraphics;
 
 }

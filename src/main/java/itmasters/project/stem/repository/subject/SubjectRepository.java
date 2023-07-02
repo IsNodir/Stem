@@ -1,6 +1,6 @@
-package itmasters.project.stem.repository;
+package itmasters.project.stem.repository.subject;
 
-import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.subject.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,15 +1,20 @@
 package itmasters.project.stem.service;
 
 import com.google.gson.Gson;
-import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.entity.TakenSubject;
 import itmasters.project.stem.entity.Topic;
 import itmasters.project.stem.entity.TopicProgress;
+import itmasters.project.stem.entity.subject.SubjectAttachment;
+import itmasters.project.stem.entity.subject.SubjectAttachmentContent;
 import itmasters.project.stem.payload.subject.SubjectDTO;
 import itmasters.project.stem.payload.subject.SubjectEn;
+import itmasters.project.stem.payload.subject.SubjectResponse;
 import itmasters.project.stem.payload.subject.SubjectUz;
 import itmasters.project.stem.payload.takenSubject.IsCompletedResponse;
-import itmasters.project.stem.repository.SubjectRepository;
+import itmasters.project.stem.repository.subject.SubjectAttachmentContentRepository;
+import itmasters.project.stem.repository.subject.SubjectAttachmentRepository;
+import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.repository.TakenSubjectRepository;
 import itmasters.project.stem.repository.TopicProgressRepository;
 import itmasters.project.stem.repository.TopicRepository;
@@ -24,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,8 @@ public class SubjectService {
     private final TopicRepository topicRepository;
     private final JwtService jwtService;
     private final TakenSubjectRepository takenSubjectRepository;
+    private final SubjectAttachmentRepository subjectAttachmentRepository;
+    private final SubjectAttachmentContentRepository subjectAttachmentContentRepository;
 
     public SubjectService(
             SubjectRepository subjectRepository,
@@ -46,7 +54,9 @@ public class SubjectService {
             TopicProgressRepository topicProgressRepository,
             TopicRepository topicRepository,
             JwtService jwtService,
-            TakenSubjectRepository takenSubjectRepository
+            TakenSubjectRepository takenSubjectRepository,
+            SubjectAttachmentRepository subjectAttachmentRepository,
+            SubjectAttachmentContentRepository subjectAttachmentContentRepository
     ) {
         this.subjectRepository = subjectRepository;
         this.userRepository = userRepository;
@@ -54,15 +64,33 @@ public class SubjectService {
         this.topicRepository = topicRepository;
         this.jwtService = jwtService;
         this.takenSubjectRepository = takenSubjectRepository;
+        this.subjectAttachmentRepository = subjectAttachmentRepository;
+        this.subjectAttachmentContentRepository = subjectAttachmentContentRepository;
     }
 
     public List<Subject> getAllSubject() {
         return subjectRepository.findAll();
     }
+    public List<SubjectResponse> getAllSubject1() {
+        List<Subject> subjectList = subjectRepository.findAll();
+        List<SubjectResponse> subjectResponseList = new ArrayList<>();
+        for (int i = 0; i < subjectList.size(); i++) {
+            SubjectResponse subjectResponse =
+                    SubjectResponse
+                            .builder()
+                            .subjectNameEn(subjectList.get(i).getSubjectNameUz())
+                            .topicCount(subjectList.get(i).getTopics().size())
+                            .subjectLogo(subjectList.get(i).getSubjectAttachment() == null ? null : subjectList.get(i).getSubjectAttachment().getSubjectAttachmentContent().getBytes())
+                            .build();
+            subjectResponseList.add(subjectResponse);
+        }
+        return subjectResponseList;
+    }
 
     public Object getAllSubjectByLanguage1(String language) throws JSONException {
 
         List<Subject> subjectList = subjectRepository.findAll();
+
 
         JSONArray jsonArray = new JSONArray(subjectList);
 
@@ -236,8 +264,37 @@ public class SubjectService {
         return subjectRepository.findById(subjectId).orElseThrow();
     }
 
-    public Subject createSubject(Subject subject) {
-        return subjectRepository.save(subject);
+    public Subject createSubject(SubjectDTO subjectDTO) throws IOException {
+
+        Subject subject = new Subject();
+        subject.setSubjectNameEn(subjectDTO.getSubjectNameEn());
+        subject.setSubjectNameUz(subjectDTO.getSubjectNameUz());
+        subject.setStreak(subject.getStreak());
+        subject.setPrice(subject.getPrice());
+        subject.setCoins(subject.getCoins());
+        subject.setStreakFirstDay(subjectDTO.getStreakFirstDay());
+        Subject savedSubject = subjectRepository.save(subject);
+
+        SubjectAttachment subjectAttachment =
+                SubjectAttachment
+                        .builder()
+                        .fileOriginalName(subjectDTO.getSubjectLogo().getOriginalFilename())
+                        .size(subjectDTO.getSubjectLogo().getSize())
+                        .contentType(subjectDTO.getSubjectLogo().getContentType())
+                        .subject(savedSubject)
+                        .build();
+        SubjectAttachment savedSubjectAttachment =
+                subjectAttachmentRepository.save(subjectAttachment);
+
+        SubjectAttachmentContent subjectAttachmentContent =
+                SubjectAttachmentContent
+                        .builder()
+                        .bytes(subjectDTO.getSubjectLogo().getBytes())
+                        .subjectAttachment(savedSubjectAttachment)
+                        .build();
+        subjectAttachmentContentRepository.save(subjectAttachmentContent);
+
+        return savedSubject;
     }
 
     public Subject updateSubject(Integer subjectId, SubjectDTO subjectDTO) {

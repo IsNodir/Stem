@@ -1,9 +1,9 @@
 package itmasters.project.stem.service;
 
-import itmasters.project.stem.entity.Subject;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.entity.Topic;
 import itmasters.project.stem.payload.TopicDTO;
-import itmasters.project.stem.repository.SubjectRepository;
+import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.repository.TopicRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
