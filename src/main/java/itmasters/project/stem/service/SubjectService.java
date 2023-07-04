@@ -90,10 +90,11 @@ public class SubjectService {
             SubjectResponse subjectResponse =
                     SubjectResponse
                             .builder()
+                            .id(subject.getId())
                             .subjectNameEn(subject.getSubjectNameEn())
                             .topicCount(subject.getTopics().size())
-                            .subjectLogo(subject.getSubjectAttachment() == null ?
-                                    null : subject.getSubjectAttachment().getSubjectAttachmentContent().getBytes())
+//                            .subjectLogo(subject.getSubjectAttachment() == null ?
+//                                    null : subject.getSubjectAttachment().getSubjectAttachmentContent().getBytes())
                             .build();
             subjectResponseList.add(subjectResponse);
         }
