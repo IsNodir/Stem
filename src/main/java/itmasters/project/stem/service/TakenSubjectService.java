@@ -13,7 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,7 +43,10 @@ public class TakenSubjectService {
         return takenSubjectRepository.findAll();
     }
 
-    public List<TakenSubject> getCurrentTakenSubjects(Integer userId) {
+    public List<TakenSubject> getCurrentTakenSubjects(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        Integer userId = userRepository.findIdByUsername(username);
         return takenSubjectRepository.findByUserIdAndIsCompleted(userId);
     }
 
@@ -49,8 +54,11 @@ public class TakenSubjectService {
         return takenSubjectRepository.findById(subjectId).orElseThrow();
     }
 
-    public Object createTakenSubject(TakenSubjectDTO takenSubjectDTO) {
-        User user = userRepository.findById(takenSubjectDTO.getUserId()).orElseThrow();
+    public Object createTakenSubject(TakenSubjectDTO takenSubjectDTO, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        Integer userId = userRepository.findIdByUsername(username);
+        User user = userRepository.findById(userId).orElseThrow();
         Subject subject = subjectRepository.findById(takenSubjectDTO.getSubjectId()).orElseThrow();
         Optional<TakenSubject> byUserIdAndSubjectId = takenSubjectRepository.findByUserIdAndSubjectId(user.getId(), subject.getId());
         if (byUserIdAndSubjectId.isPresent()) return "This subject is taken";
@@ -62,7 +70,9 @@ public class TakenSubjectService {
         takenSubject.setCompleted(false);
         takenSubject.setUser(user);
         takenSubject.setSubject(subject);
-        return takenSubjectRepository.save(takenSubject);
+        takenSubjectRepository.save(takenSubject);
+        Map<String, String> response = new HashMap<>();
+        return response.put("Success", "true");
     }
 
     //TODO: check the course for completed
