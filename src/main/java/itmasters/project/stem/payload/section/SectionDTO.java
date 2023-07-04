@@ -28,4 +28,8 @@ public class SectionDTO {
 
     private MultipartFile threeDGraphics;
 
+    private String pictureUrl;
+
+    private String threeDGraphicsUrl;
+
 }

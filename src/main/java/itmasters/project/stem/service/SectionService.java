@@ -75,6 +75,8 @@ public class SectionService {
         section.setTextUz(sectionDTO.getTextUz());
         section.setTextEn(sectionDTO.getTextEn());
         section.setVideoUrl(sectionDTO.getVideoUrl());
+        section.setTopicUrl(sectionDTO.getPictureUrl());
+        section.setThreeDGraphicsUrl(sectionDTO.getThreeDGraphicsUrl());
         section.setTopic(optionalTopic.get());
         Section savedSection = sectionRepository.save(section);
 
@@ -110,6 +112,8 @@ public class SectionService {
                 .textEn(section.getTextEn())
                 .videoUrl(section.getVideoUrl())
                 .topic(topicId)
+                .pictureUrl(section.getTopicUrl())
+                .threeDGraphicsUrl(section.getThreeDGraphicsUrl())
                 .picture(picture1)
                 .threeDGraphics(threeDGraphics)
                 .build();
@@ -126,6 +130,8 @@ public class SectionService {
         updatedSection.setTextUz(sectionDTO.getTextUz());
         updatedSection.setTextEn(sectionDTO.getTextEn());
         updatedSection.setVideoUrl(sectionDTO.getVideoUrl());
+        updatedSection.setTopicUrl(sectionDTO.getPictureUrl());
+        updatedSection.setThreeDGraphicsUrl(sectionDTO.getThreeDGraphicsUrl());
         Section savedSection = sectionRepository.save(updatedSection);
 
         Integer pictureBySectionId = pictureRepository.findPictureBySectionId(sectionId);

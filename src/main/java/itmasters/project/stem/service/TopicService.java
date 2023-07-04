@@ -26,8 +26,8 @@ public class TopicService {
         this.subjectRepository = subjectRepository;
     }
 
-    public List<Topic> getAllTopic() {
-        return topicRepository.findAll();
+    public List<Topic> getAllTopicBySubject(Integer subjectId) {
+        return topicRepository.findAllTopicsBySubjectId(subjectId);
     }
 
     public Topic getTopicById(Integer topicId) {

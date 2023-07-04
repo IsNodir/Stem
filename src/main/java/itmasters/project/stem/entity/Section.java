@@ -30,6 +30,10 @@ public class Section {
 
     private String videoUrl;
 
+    private String topicUrl;
+
+    private String threeDGraphicsUrl;
+
     @ManyToOne
     @JsonIgnore
     private Topic topic;

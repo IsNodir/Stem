@@ -206,7 +206,6 @@ public class QuizService {
 
     public Subject getQuizBySubjectId(Integer subjectId, String language) {
         return subjectRepository.findById(subjectId).orElseThrow();
-//        return null;
     }
 
     public Topic getAllQuizByTopicId(Integer topicId, String language) {
