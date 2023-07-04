@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AiAuthenticationHeader {
 
-    private final String aiApiKey = "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";
+    private final String aiApiKey = "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";
 
     @Bean
     public RestTemplate template(){
