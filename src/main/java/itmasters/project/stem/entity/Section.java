@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -24,13 +25,15 @@ public class Section {
 
     private String titleEn;
 
+    @Length(max = 10000)
     private String textUz;
 
+    @Length(max = 10000)
     private String textEn;
 
     private String videoUrl;
 
-    private String topicUrl;
+    private String pictureUrl;
 
     private String threeDGraphicsUrl;
 
@@ -38,10 +41,10 @@ public class Section {
     @JsonIgnore
     private Topic topic;
 
-    @OneToOne(mappedBy = "section")
-    private Picture picture;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private ThreeDGraphics threeDGraphics;
+//    @OneToOne(mappedBy = "section")
+//    private Picture picture;
+//
+//    @OneToOne(fetch = FetchType.EAGER)
+//    private ThreeDGraphics threeDGraphics;
 
 }

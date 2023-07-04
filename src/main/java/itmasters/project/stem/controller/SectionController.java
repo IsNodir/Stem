@@ -49,7 +49,7 @@ public class SectionController {
     }
 
     @PostMapping("/{topicId}/create")
-    public HttpEntity<?> addSection(@PathVariable Integer topicId, @ModelAttribute SectionDTO sectionDTO) {
+    public HttpEntity<?> addSection(@PathVariable Integer topicId, @RequestBody SectionDTO sectionDTO) {
         try {
             return ResponseEntity.status(201).body(sectionService.createSection(topicId, sectionDTO));
         } catch (Exception e) {
