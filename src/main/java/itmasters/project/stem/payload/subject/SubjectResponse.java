@@ -8,7 +8,11 @@ import lombok.*;
 @NoArgsConstructor
 public class SubjectResponse {
 
+    private Integer id;
+
     private String subjectNameEn;
+
+    private String subjectNameUz;
 
     private int topicCount;
 
