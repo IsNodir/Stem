@@ -28,7 +28,7 @@ public class SectionController {
         }
     }
 
-    @GetMapping("/{sectionId}")
+    @GetMapping("/{sectionId}/section")
     public HttpEntity<?> getSectionById(@PathVariable Integer sectionId) {
         try {
             return ResponseEntity.ok(sectionService.getSectionById(sectionId));
@@ -38,7 +38,7 @@ public class SectionController {
         }
     }
 
-    @GetMapping("/{topicId}")
+    @GetMapping("/{topicId}/topic")
     public HttpEntity<?> getAllSectionByTopicId(@PathVariable Integer topicId) {
         try {
             return ResponseEntity.status(201).body(sectionService.getAllSectionByTopicId(topicId));
@@ -49,7 +49,7 @@ public class SectionController {
     }
 
     @PostMapping("/{topicId}/create")
-    public HttpEntity<?> addSection(@PathVariable Integer topicId, @RequestBody SectionDTO sectionDTO) {
+    public HttpEntity<?> addSection(@PathVariable Integer topicId, @ModelAttribute SectionDTO sectionDTO) {
         try {
             return ResponseEntity.status(201).body(sectionService.createSection(topicId, sectionDTO));
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class SectionController {
     }
 
     @PutMapping("/{sectionId}")
-    public HttpEntity<?> updateSection(@PathVariable Integer sectionId, @RequestBody SectionDTO sectionDTO) {
+    public HttpEntity<?> updateSection(@PathVariable Integer sectionId, @ModelAttribute SectionDTO sectionDTO) {
         try {
             return ResponseEntity.status(202).body(sectionService.updateSection(sectionId, sectionDTO));
         } catch (Exception e) {

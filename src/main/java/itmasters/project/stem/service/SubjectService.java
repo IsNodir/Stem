@@ -1,10 +1,10 @@
 package itmasters.project.stem.service;
 
 import com.google.gson.Gson;
-import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.entity.TakenSubject;
 import itmasters.project.stem.entity.Topic;
 import itmasters.project.stem.entity.TopicProgress;
+import itmasters.project.stem.entity.subject.Subject;
 import itmasters.project.stem.entity.subject.SubjectAttachment;
 import itmasters.project.stem.entity.subject.SubjectAttachmentContent;
 import itmasters.project.stem.payload.subject.SubjectDTO;
@@ -12,18 +12,15 @@ import itmasters.project.stem.payload.subject.SubjectEn;
 import itmasters.project.stem.payload.subject.SubjectResponse;
 import itmasters.project.stem.payload.subject.SubjectUz;
 import itmasters.project.stem.payload.takenSubject.IsCompletedResponse;
-import itmasters.project.stem.repository.subject.SubjectAttachmentContentRepository;
-import itmasters.project.stem.repository.subject.SubjectAttachmentRepository;
-import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.repository.TakenSubjectRepository;
 import itmasters.project.stem.repository.TopicProgressRepository;
 import itmasters.project.stem.repository.TopicRepository;
+import itmasters.project.stem.repository.subject.SubjectAttachmentContentRepository;
+import itmasters.project.stem.repository.subject.SubjectAttachmentRepository;
+import itmasters.project.stem.repository.subject.SubjectRepository;
 import itmasters.project.stem.security.config.JwtService;
 import itmasters.project.stem.security.user.User;
 import itmasters.project.stem.security.user.UserRepository;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -91,6 +88,7 @@ public class SubjectService {
                     SubjectResponse
                             .builder()
                             .id(subject.getId())
+                            .subjectNameUz(subject.getSubjectNameUz())
                             .subjectNameEn(subject.getSubjectNameEn())
                             .topicCount(subject.getTopics().size())
 //                            .subjectLogo(subject.getSubjectAttachment() == null ?

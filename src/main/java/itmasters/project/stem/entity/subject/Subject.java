@@ -24,8 +24,6 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @Column(unique = true)
     private String subjectNameUz;
 
     private String subjectNameEn;
