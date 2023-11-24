@@ -12,6 +12,8 @@ public class SubjectResponse {
 
     private String subjectNameEn;
 
+    private String subjectNameUz;
+
     private int topicCount;
 
 //    private byte[] subjectLogo;

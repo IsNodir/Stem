@@ -42,10 +42,10 @@ public class TakenSubjectController {
     }
 
     //berilmidi
-    @GetMapping("/{language}/current/{userId}")
-    public HttpEntity<?> getCurrentTakenSubjects(@PathVariable String language, @PathVariable Integer userId) {
+    @GetMapping("/current")
+    public HttpEntity<?> getCurrentTakenSubjects(HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(takenSubjectService.getCurrentTakenSubjects(userId));
+            return ResponseEntity.ok(takenSubjectService.getCurrentTakenSubjects(request));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -73,9 +73,12 @@ public class TakenSubjectController {
     }
 
     @PostMapping
-    public HttpEntity<?> addTakenSubject(@RequestBody TakenSubjectDTO takenSubjectDTO) {
+    public HttpEntity<?> addTakenSubject(
+            @RequestBody TakenSubjectDTO takenSubjectDTO,
+            HttpServletRequest request
+    ) {
         try {
-            return ResponseEntity.status(201).body(takenSubjectService.createTakenSubject(takenSubjectDTO));
+            return ResponseEntity.status(201).body(takenSubjectService.createTakenSubject(takenSubjectDTO, request));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());

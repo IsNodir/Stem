@@ -18,17 +18,17 @@ public class TopicController {
         this.topicService = topicService;
     }
 
-    @GetMapping
-    public HttpEntity<?> getAllTopic() {
+    @GetMapping("/{subjectId}")
+    public HttpEntity<?> getAllTopic(@PathVariable Integer subjectId) {
         try {
-            return ResponseEntity.ok(topicService.getAllTopic());
+            return ResponseEntity.ok(topicService.getAllTopicBySubject(subjectId));
         } catch (Exception e) {
             log.error("Error: {}", e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public HttpEntity<?> getTopicById(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(topicService.getTopicById(id));

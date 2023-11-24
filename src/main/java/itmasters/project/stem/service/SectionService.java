@@ -75,34 +75,36 @@ public class SectionService {
         section.setTextUz(sectionDTO.getTextUz());
         section.setTextEn(sectionDTO.getTextEn());
         section.setVideoUrl(sectionDTO.getVideoUrl());
+        section.setPictureUrl(sectionDTO.getPictureUrl());
+        section.setThreeDGraphicsUrl(sectionDTO.getThreeDGraphicsUrl());
         section.setTopic(optionalTopic.get());
         Section savedSection = sectionRepository.save(section);
 
-        Picture picture1 = new Picture();
-        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
-        picture1.setContentType(sectionDTO.getPicture().getContentType());
-        picture1.setSize(sectionDTO.getPicture().getSize());
-        picture1.setSection(savedSection);
-        Picture savedPicture = pictureRepository.save(picture1);
+//        Picture picture1 = new Picture();
+//        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
+//        picture1.setContentType(sectionDTO.getPicture().getContentType());
+//        picture1.setSize(sectionDTO.getPicture().getSize());
+//        picture1.setSection(savedSection);
+//        Picture savedPicture = pictureRepository.save(picture1);
+//
+//        PictureAttachment pictureAttachment = new PictureAttachment();
+//        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
+//        pictureAttachment.setPicture(savedPicture);
+//        pictureAttachmentRepository.save(pictureAttachment);
+//
+//        ThreeDGraphics threeDGraphics = new ThreeDGraphics();
+//        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
+//        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
+//        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
+//        threeDGraphics.setSection(savedSection);
+//        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
+//
+//        ThreeDGraphicsAttachment threeDGraphicsAttachment = new ThreeDGraphicsAttachment();
+//        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
+//        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
+//        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
 
-        PictureAttachment pictureAttachment = new PictureAttachment();
-        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
-        pictureAttachment.setPicture(savedPicture);
-        pictureAttachmentRepository.save(pictureAttachment);
-
-        ThreeDGraphics threeDGraphics = new ThreeDGraphics();
-        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
-        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
-        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
-        threeDGraphics.setSection(savedSection);
-        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
-
-        ThreeDGraphicsAttachment threeDGraphicsAttachment = new ThreeDGraphicsAttachment();
-        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
-        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
-        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
-
-        Picture picture = pictureAttachmentRepository.getPictureAndPictureAttachmentByPictureId(picture1.getId());
+//        Picture picture = pictureAttachmentRepository.getPictureAndPictureAttachmentByPictureId(picture1.getId());
         return SectionResponse.builder()
                 .titleUz(section.getTitleUz())
                 .titleEn(section.getTitleEn())
@@ -110,8 +112,10 @@ public class SectionService {
                 .textEn(section.getTextEn())
                 .videoUrl(section.getVideoUrl())
                 .topic(topicId)
-                .picture(picture1)
-                .threeDGraphics(threeDGraphics)
+                .pictureUrl(section.getPictureUrl())
+                .threeDGraphicsUrl(section.getThreeDGraphicsUrl())
+//                .picture(picture1)
+//                .threeDGraphics(threeDGraphics)
                 .build();
     }
 
@@ -126,46 +130,48 @@ public class SectionService {
         updatedSection.setTextUz(sectionDTO.getTextUz());
         updatedSection.setTextEn(sectionDTO.getTextEn());
         updatedSection.setVideoUrl(sectionDTO.getVideoUrl());
+        updatedSection.setPictureUrl(sectionDTO.getPictureUrl());
+        updatedSection.setThreeDGraphicsUrl(sectionDTO.getThreeDGraphicsUrl());
         Section savedSection = sectionRepository.save(updatedSection);
 
-        Integer pictureBySectionId = pictureRepository.findPictureBySectionId(sectionId);
-        if (pictureBySectionId.equals(0)) {
-            throw new IOException();
-        }
-        Picture picture1 = pictureRepository.findById(pictureBySectionId).orElseThrow();
-        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
-        picture1.setContentType(sectionDTO.getPicture().getContentType());
-        picture1.setSize(sectionDTO.getPicture().getSize());
-        picture1.setSection(savedSection);
-        Picture savedPicture = pictureRepository.save(picture1);
-
-        Integer pictureAttachmentId = pictureAttachmentRepository.findPictureAttachmentByPictureId(pictureBySectionId);
-        if (pictureAttachmentId.equals(0)) {
-            throw new IOException();
-        }
-        PictureAttachment pictureAttachment = pictureAttachmentRepository.findById(pictureAttachmentId).orElseThrow();
-        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
-        pictureAttachment.setPicture(savedPicture);
-        pictureAttachmentRepository.save(pictureAttachment);
-
-        Integer threeDGraphicsBySectionId = threeDGraphicsRepository.findThreeDGraphicsBySectionId(sectionId);
-        if (threeDGraphicsBySectionId.equals(0)) {
-            throw new IOException();
-        }
-        ThreeDGraphics threeDGraphics = threeDGraphicsRepository.findById(threeDGraphicsBySectionId).orElseThrow();
-        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
-        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
-        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
-        threeDGraphics.setSection(savedSection);
-        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
-
-        Integer threeDGraphicsAttachmentByThreeDGraphicsId =
-                threeDGraphicsAttachmentRepository.findThreeDGraphicsAttachmentByThreeDGraphicsId(threeDGraphicsBySectionId);
-        ThreeDGraphicsAttachment threeDGraphicsAttachment =
-                threeDGraphicsAttachmentRepository.findById(threeDGraphicsAttachmentByThreeDGraphicsId).orElseThrow();
-        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
-        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
-        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
+//        Integer pictureBySectionId = pictureRepository.findPictureBySectionId(sectionId);
+//        if (pictureBySectionId.equals(0)) {
+//            throw new IOException();
+//        }
+//        Picture picture1 = pictureRepository.findById(pictureBySectionId).orElseThrow();
+//        picture1.setFileOriginalName(sectionDTO.getPicture().getOriginalFilename());
+//        picture1.setContentType(sectionDTO.getPicture().getContentType());
+//        picture1.setSize(sectionDTO.getPicture().getSize());
+//        picture1.setSection(savedSection);
+//        Picture savedPicture = pictureRepository.save(picture1);
+//
+//        Integer pictureAttachmentId = pictureAttachmentRepository.findPictureAttachmentByPictureId(pictureBySectionId);
+//        if (pictureAttachmentId.equals(0)) {
+//            throw new IOException();
+//        }
+//        PictureAttachment pictureAttachment = pictureAttachmentRepository.findById(pictureAttachmentId).orElseThrow();
+//        pictureAttachment.setBytes(sectionDTO.getPicture().getBytes());
+//        pictureAttachment.setPicture(savedPicture);
+//        pictureAttachmentRepository.save(pictureAttachment);
+//
+//        Integer threeDGraphicsBySectionId = threeDGraphicsRepository.findThreeDGraphicsBySectionId(sectionId);
+//        if (threeDGraphicsBySectionId.equals(0)) {
+//            throw new IOException();
+//        }
+//        ThreeDGraphics threeDGraphics = threeDGraphicsRepository.findById(threeDGraphicsBySectionId).orElseThrow();
+//        threeDGraphics.setFileOriginalName(sectionDTO.getThreeDGraphics().getOriginalFilename());
+//        threeDGraphics.setContentType(sectionDTO.getThreeDGraphics().getContentType());
+//        threeDGraphics.setSize(sectionDTO.getThreeDGraphics().getSize());
+//        threeDGraphics.setSection(savedSection);
+//        ThreeDGraphics savedThreeDGraphics = threeDGraphicsRepository.save(threeDGraphics);
+//
+//        Integer threeDGraphicsAttachmentByThreeDGraphicsId =
+//                threeDGraphicsAttachmentRepository.findThreeDGraphicsAttachmentByThreeDGraphicsId(threeDGraphicsBySectionId);
+//        ThreeDGraphicsAttachment threeDGraphicsAttachment =
+//                threeDGraphicsAttachmentRepository.findById(threeDGraphicsAttachmentByThreeDGraphicsId).orElseThrow();
+//        threeDGraphicsAttachment.setBytes(sectionDTO.getThreeDGraphics().getBytes());
+//        threeDGraphicsAttachment.setThreeDGraphics(savedThreeDGraphics);
+//        threeDGraphicsAttachmentRepository.save(threeDGraphicsAttachment);
 
         return savedSection;
     }

@@ -26,6 +26,10 @@ public class SectionResponse {
 
     private Integer topic;
 
+    private String pictureUrl;
+
+    private String threeDGraphicsUrl;
+
     private Picture picture;
 
     private ThreeDGraphics threeDGraphics;

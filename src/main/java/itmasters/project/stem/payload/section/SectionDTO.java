@@ -24,8 +24,12 @@ public class SectionDTO {
 
     private Integer topic;
 
-    private MultipartFile picture;
+//    private MultipartFile picture;
+//
+//    private MultipartFile threeDGraphics;
 
-    private MultipartFile threeDGraphics;
+    private String pictureUrl;
+
+    private String threeDGraphicsUrl;
 
 }
